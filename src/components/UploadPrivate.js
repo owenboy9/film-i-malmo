@@ -12,27 +12,43 @@ function UploadPrivate() {
     setUploading(true);
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}.${fileExt}`;
+    const filePath = `${fileName}`;
 
-    const { data, error } = await supabase.storage
+    // Step 1: Upload to Storage
+    const { data: uploadData, error: uploadError } = await supabase.storage
       .from('private-media')
-      .upload(fileName, file);
+      .upload(filePath, file);
 
-    if (error) {
-      alert('Upload error: ' + error.message);
+    if (uploadError) {
+      alert('Upload failed: ' + uploadError.message);
       setUploading(false);
       return;
     }
 
-    // Now generate a signed URL to allow temporary access (e.g. 1 hour)
-    const { data: signedUrlData, error: signedUrlError } = await supabase
-      .storage
-      .from('private-media')
-      .createSignedUrl(fileName, 60 * 60); // 1 hour = 3600 seconds
+    // Step 2: Save metadata to DB
+    const { data: insertData, error: insertError } = await supabase
+      .from('media_files')
+      .insert([
+        {
+          file_name: filePath,
+          bucket: 'private-media',
+          is_public: false,
+          // uploaded_by: user.id (if auth is used)
+        }
+      ]);
 
-    if (signedUrlError) {
-      alert('Signed URL error: ' + signedUrlError.message);
+    if (insertError) {
+      alert('Upload succeeded but DB insert failed: ' + insertError.message);
     } else {
-      setUrl(signedUrlData.signedUrl);
+      const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+        .from('private-media')
+        .createSignedUrl(filePath, 3600); // 1 hour signed access
+
+      if (signedUrlError) {
+        alert('Signed URL generation failed: ' + signedUrlError.message);
+      } else {
+        setUrl(signedUrlData.signedUrl);
+      }
     }
 
     setUploading(false);
@@ -51,7 +67,9 @@ function UploadPrivate() {
       {url && (
         <div>
           <p>Private file uploaded!</p>
-          <a href={url} target="_blank" rel="noopener noreferrer">View (1h access)</a>
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            View (1h access)
+          </a>
         </div>
       )}
     </div>
