@@ -22,6 +22,12 @@ function DownloadPrivate() {
       return;
     }
 
+    if (!data?.signedUrl) {
+        alert('Could not generate a signed URL. Please check the file name.');
+        setLoading(false);
+        return;
+    }
+
     setSignedUrl(data.signedUrl);
     setLoading(false);
   };
@@ -32,7 +38,7 @@ function DownloadPrivate() {
         type="text"
         placeholder="Enter exact file name (e.g. 17292739.jpg)"
         value={fileName}
-        onChange={(e) => setFileName(e.target.value)}
+        onChange={(e) => setFileName(e.target.value.trim())}
       />
       <button onClick={handleDownload} disabled={loading}>
         {loading ? 'Generating...' : 'Get Download Link'}
