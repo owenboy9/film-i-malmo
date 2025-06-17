@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/home'
 import Contact from './pages/contact'
 import About from './pages/about';
