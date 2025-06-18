@@ -1,27 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# # dependencies
-# /node_modules
-# /.pnp
-# .pnp.js
-
-# # testing
-# /coverage
-
-# # production
-# /build
-
-# # misc
-# .DS_Store
-# .env.local
-# .env.development.local
-# .env.test.local
-# .env.production.local
-
-# npm-debug.log*
-# yarn-debug.log*
-# yarn-error.log*
-
 # dependencies
 /node_modules/
 /.pnp
@@ -29,12 +5,12 @@
  
 # testing
 /coverage/
- 
+
 # production
 /build/
 /dist/
 /out/
- 
+
 # environment variables
 .env
 .env.local
@@ -43,7 +19,7 @@
 .env.production.local
 .env.*          # catch-all, but exclude example below
 !.env.example
- 
+
 # misc
 .DS_Store
 *.log
@@ -51,10 +27,10 @@ logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
- 
+
 # editor settings
 .vscode/
 .idea/
- 
+
 # OS-specific
 Thumbs.db
