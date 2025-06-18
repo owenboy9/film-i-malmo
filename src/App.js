@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/home'
 import Contact from './pages/contact'
 import About from './pages/about';
+import TestDb from './pages/testdb';
 import TestSupabase from './TestSupabase'
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={ <Home /> } />
           <Route path="/contact" element={ <Contact /> } />
           <Route path="/about" element={ <About /> } />
+          <Route path="/testdb" element={ <TestDb /> } />
           <Route path="/test" element={<TestSupabase />} />
         </Routes>
       </BrowserRouter>
