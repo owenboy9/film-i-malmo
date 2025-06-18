@@ -1,4 +1,5 @@
 import React from 'react'
+import UploadPublic from '../components/UploadPublic'
 
 export default function home() {
   return (
