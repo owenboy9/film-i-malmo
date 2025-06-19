@@ -1,6 +1,6 @@
-import DbGenericInsert from '../components/aDbGenericInsert'
+import DbGenericInsert from '../components/DbGenericInsert'
 import DbGenericRead from '../components/DbGenericRead'
-import DbGenericUpdate from '../components/aDbGenericUpdate'
+import DbGenericUpdate from '../components/DbGenericUpdate'
 import DbGenericDelete from '../components/DbGenericDelete'
 
 export default function TestDb() {

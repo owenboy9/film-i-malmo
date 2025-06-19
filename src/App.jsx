@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Contact from './pages/Contact';
 import About from './pages/About';
-import TestDb from './pages/aTestDb';
+import TestDb from './pages/TestDb';
 import TestSupabase from './TestSupabase';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import Schedule from './pages/Schedule';
