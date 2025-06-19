@@ -1,23 +1,23 @@
 import logo from './logo.svg';
 import React, { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
-import Home from './pages/home'
-import Contact from './pages/contact'
-import About from './pages/about';
-import TestDb from './pages/testdb';
+import Home from './pages/Home'
+import Contact from './pages/Contact'
+import About from './pages/About';
+import TestDb from './pages/TestDb';
 import TestSupabase from './TestSupabase'
 import ResetPasswordPage from './pages/ResetPasswordPage'
-import Schedule from './pages/schedule';
-import Currentboard from './pages/currentboard';
-import Freescreen from './pages/freescreen';
-import Press from './pages/press';
-import Hypnos from './pages/hypnos';
-import AnnualMeeting from './pages/annualmeeting';
-import Volunteering from './pages/volunteering';
-import More from './pages/more';
-import MemberInfo from './pages/memberinfo';
-import PastEvents from './pages/pastevents';
-import CurrentPastProjects from './pages/currentpastprojects';
+import Schedule from './pages/Schedule';
+import Currentboard from './pages/CurrentBoard';
+import Freescreen from './pages/Freescreen';
+import Press from './pages/Press';
+import Hypnos from './pages/Hypnos';
+import AnnualMeeting from './pages/AnnualMeeting';
+import Volunteering from './pages/Volunteering';
+import More from './pages/More';
+import MemberInfo from './pages/MemberInfo';
+import PastEvents from './pages/PastEvents';
+import CurrentPastProjects from './pages/CurrentPastProjects';
 
 function HashRedirector() {
   const navigate = useNavigate();
