@@ -11,6 +11,15 @@ export default function TestDb() {
       { name: 'description', type: 'text' }
     ]
   };
+  const aboutCrudProps = {
+    table: 'about',
+    fields: [
+      { name: 'title', type: 'text' },
+      { name: 'description', type: 'text' },
+      { name: 'logo_small_path', type: 'text' }
+    ],
+    optionLabels: ['title']
+  };
 
   return (
     <div>TestDB
@@ -27,28 +36,31 @@ export default function TestDb() {
       <h2>Testa generisk delete</h2>
       <DbGenericDelete {...movieCrudProps} />
 
-      <h2>Testa generisk insert collab</h2>
-      <DbGenericRead
+      {/* <h2>Testa generisk insert collab</h2> */}
+      {/* <DbGenericRead
         table="collaborators"
         fields={ [ {name:'name', type: 'text'},
           {name:'partnership_type', type: 'partnership_type'}
         ] }
       />
-      <h5>partnership_type: sponsor/collaborator</h5>
       <DbGenericInsert
         table="collaborators"
         fields={ [ {name:'name', type: 'text'},
-          {name:'partnership_type', type: 'partnership_type'}
+          {name:'partnership_type', type: 'select', options: ['sponsor', 'collaborator']}
         ] }
       />
       <DbGenericUpdate
         table="collaborators"
-        fields={ [ {name:'name', type: 'text'}] }
+        fields={ [ {name:'name', type: 'text'}, {name:'partnership_type', type: 'select', options: ['sponsor', 'collaborator']}] }
       />
       <DbGenericDelete
         table="collaborators"
         fields={ [ {name:'name', type: 'text'}] }
-      />
+      /> */}
+      <DbGenericRead{...aboutCrudProps} />
+      <DbGenericInsert{...aboutCrudProps} />
+      <DbGenericUpdate{...aboutCrudProps} />
+      <DbGenericDelete{...aboutCrudProps} />
     </div>
   )
 }
