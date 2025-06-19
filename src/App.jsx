@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import React, { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Home from './pages/Home'
@@ -18,6 +17,8 @@ import More from './pages/More';
 import MemberInfo from './pages/MemberInfo';
 import PastEvents from './pages/PastEvents';
 import CurrentPastProjects from './pages/CurrentPastProjects';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 function HashRedirector() {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
+      <Header />
         <Routes>
           <Route path="/" element={<><HashRedirector /><Home /></>} />
           <Route path="/schedule" element={ <Schedule /> } />
@@ -53,11 +55,11 @@ function App() {
           <Route path="/more" element={ <More /> } />
           <Route path="/pastevents" element={ <PastEvents /> } />
           <Route path="/currentpastprojects" element={ <CurrentPastProjects /> } />
-          <Route path="/memberinfo" element={ <MemberInfo /> } />
-          
+          <Route path="/memberinfo" element={ <MemberInfo /> } />  
           <Route path="/test" element={<TestSupabase />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
         </Routes>
+      <Footer />
       </BrowserRouter>
     </div>
   );
