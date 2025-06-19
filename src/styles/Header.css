@@ -1,0 +1,198 @@
+.header {
+  position: fixed;
+  top: 0;
+  height: 4rem;
+  width: 100%;
+  background: #004aa0;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+}
+
+  /* Desktop nav */
+
+  .nav-desktop {
+    position: absolute;
+    bottom: 0rem;
+    right: 3rem;
+    opacity: 0;
+    animation: fadeIn 0.8s ease-in-out forwards;
+  }
+
+  /* Responsive styles for the header */
+
+.hamburger {
+  font-size: 28px;
+  color:  #dbbf8b;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none;
+  position: absolute;
+  right: 3rem;
+  z-index: 1000; /* Ensure the hamburger is above other elements */
+}
+
+.logo {
+  position: absolute;
+  top: 0.5rem;
+  left: 2rem;
+  height: 80px;
+  z-index: 1000;
+}
+
+.header.visible {
+  transform: translateY(0);
+  animation: fadeInHeader 1s ease-in-out forwards;
+}
+
+@keyframes fadeInHeader {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.header.hidden {
+  transform: translateY(-100%);
+  animation: fadeOutHeader 1s ease-in-out forwards;
+
+}
+
+@keyframes fadeOutHeader {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+
+
+  }
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+
+  }
+}
+
+@media (max-width: 800px) {
+  .header {
+    height: 3rem;   
+  }
+  .logo {
+    position: absolute;
+    top: 0rem;
+    left: 0rem;
+    height: 70px;
+    z-index: 1000;
+    opacity: 1;
+  }
+  
+}
+
+  .nav-desktop ul {
+    display: flex;
+    color: white;
+    gap: 20px;
+    list-style: none;
+  }
+  
+  nav{
+    display: flex;
+    justify-content: right;
+  }
+  
+  .headerbtn {
+    color: white;
+    text-decoration: none;
+    font-size: 1.3em;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+  }
+  .headerbtn:hover {
+    color:  #dbbf8b; 
+    transform: scale(1.05); /* Slightly enlarge the button on hover */
+  }
+  .headerbtn.active {
+    color:  #dbbf8b;
+  }
+  .header h1{
+    text-align: start;
+    margin-left: 1rem;
+    font-size: 1.5rem;
+  }
+
+/* Header styles for mobile */
+
+/* Nav menu for mobile */
+.nav-menu {
+  display: none;
+}
+.nav-menu ul {
+  list-style: none;
+  padding: 80px;
+  background: white;
+  position: absolute;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  flex-direction: column;
+  gap: 10px;
+  border: solid 1px black;
+  box-shadow: #282c34 0px 4px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  top: 0rem;
+  right: 5rem;
+}
+.nav-menu.open {
+  display: flex;
+}
+.nav-menu ul li a {
+  text-decoration: none;
+  font-size: 1.3rem;
+  color: #333;
+}
+.burgerbtn.active {
+  color: #dbbf8b;
+}
+
+@media (max-width: 868px) {
+  .hamburger {
+    display: block;
+    animation: fadeIn 1s ease-in-out forwards;
+  }
+
+  .nav-desktop {
+    display: none;
+  }
+
+}
+
+/* keyframes for smooth fade */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .portfolio {
+    height: 45px;
+    top: 0rem;
+    left: 0rem;
+  }
+}
+
+/* Ensure hidden header is still accessible */
+.header.hidden {
+  transform: translateY(-100%); /* Your hide animation */
+  visibility: visible; /* Keep focusable */
+  position: fixed; /* Ensure it stays in DOM */
+}
+
+
+
+
