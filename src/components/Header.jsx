@@ -57,7 +57,7 @@ export default function Header() {
     <header className={`header ${isHeaderVisible ? 'visible' : 'hidden'}`}>
         
       <div className="logo-container">
-        <NavLink to="/Home" onClick={() => {window.scrollTo(0, 0);}} className="logo-link">
+        <NavLink to="/" onClick={() => {window.scrollTo(0, 0);}} className="logo-link">
           <img src={FilmiMalmoLogo} alt="Film i Malmö Logo" className="logo" />
         </NavLink>
       </div>
@@ -70,12 +70,12 @@ export default function Header() {
       <nav className={`nav-menu ${isMenuOpen ? 'open' : ''}`}>
         <ul>
           <li>
-            <NavLink to="/Home" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
+            <NavLink to="/" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
             Home
             </NavLink>
           </li>
           <li>
-            <NavLink to="/home" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
+            <NavLink to="/Schedule" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
             Schedule
             </NavLink>
           </li>
@@ -90,7 +90,7 @@ export default function Header() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/home" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
+            <NavLink to="/more" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
             More
             </NavLink>
           </li>
@@ -105,12 +105,12 @@ export default function Header() {
       <nav className="nav-desktop">
         <ul>
           <li>
-            <NavLink to="/home" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
+            <NavLink to="/" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
               Home
             </NavLink>
           </li>
           <li>
-            <NavLink to="/home" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
+            <NavLink to="/schedule" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
               Schedule
             </NavLink>
           </li>
@@ -125,7 +125,7 @@ export default function Header() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/home" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
+            <NavLink to="/more" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
               More
             </NavLink>
           </li>
