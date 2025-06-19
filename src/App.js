@@ -7,6 +7,17 @@ import About from './pages/about';
 import TestDb from './pages/testdb';
 import TestSupabase from './TestSupabase'
 import ResetPasswordPage from './pages/ResetPasswordPage'
+import Schedule from './pages/schedule';
+import Currentboard from './pages/currentboard';
+import Freescreen from './pages/freescreen';
+import Press from './pages/press';
+import Hypnos from './pages/hypnos';
+import AnnualMeeting from './pages/annualmeeting';
+import Volunteering from './pages/volunteering';
+import More from './pages/more';
+import MemberInfo from './pages/memberinfo';
+import PastEvents from './pages/pastevents';
+import CurrentPastProjects from './pages/currentpastprojects';
 
 function HashRedirector() {
   const navigate = useNavigate();
@@ -22,17 +33,6 @@ function HashRedirector() {
   }, [navigate]);
   return null;
 }
-import Schedule from './pages/schedule';
-import Currentboard from './pages/currentboard';
-import Freescreen from './pages/freescreen';
-import Press from './pages/press';
-import Hypnos from './pages/hypnos';
-import AnnualMeeting from './pages/annualmeeting';
-import Volunteering from './pages/volunteering';
-import More from './pages/more';
-import MemberInfo from './pages/memberinfo';
-import PastEvents from './pages/pastevents';
-import CurrentPastProjects from './pages/currentpastprojects';
 
 function App() {
   return (
