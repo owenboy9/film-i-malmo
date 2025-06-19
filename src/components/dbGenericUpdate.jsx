@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../supabase'
 
-export default function DbGenericUpdate({ table, fields }) {
+export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
   const [rows, setRows] = useState([])
   const [selectedId, setSelectedId] = useState('')
   const [values, setValues] = useState({})
@@ -22,7 +22,8 @@ export default function DbGenericUpdate({ table, fields }) {
 
   useEffect(() => {
     if (!selectedId) return
-    const row = rows.find(r => r.id === Number(selectedId))
+    // Jämför id som strängar för att alltid hitta rätt rad
+    const row = rows.find(r => String(r.id) === String(selectedId))
     if (row) {
       setValues(fields.reduce((acc, f) => ({ ...acc, [f.name]: row[f.name] }), {}))
     }
@@ -63,7 +64,10 @@ export default function DbGenericUpdate({ table, fields }) {
           <option value="">Välj rad...</option>
           {rows.map(row => (
             <option key={row.id} value={row.id}>
-              {fields.map(f => row[f.name]).join(' | ')}
+              {optionLabels.length > 0
+                ? optionLabels.map(label => row[label]).join(' | ')
+                : fields.map(f => row[f.name]).join(' | ')
+              }
             </option>
           ))}
         </select>
@@ -71,7 +75,20 @@ export default function DbGenericUpdate({ table, fields }) {
           <div key={field.name}>
             <label>
               {field.name}:{' '}
-              {field.type === 'checkbox' ? (
+              {field.type === 'select' ? (
+                <select
+                  name={field.name}
+                  value={values[field.name] ?? ''}
+                  onChange={e => handleChange(e, field.type)}
+                  required
+                  disabled={!selectedId}
+                >
+                  <option value="">Välj...</option>
+                  {field.options && field.options.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+              ) : field.type === 'checkbox' ? (
                 <input
                   name={field.name}
                   type="checkbox"

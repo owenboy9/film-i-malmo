@@ -44,7 +44,19 @@ export default function DbGenericInsert({ table, fields }) {
           <div key={field.name}>
             <label>
               {field.name}:{' '}
-              {field.type === 'checkbox' ? (
+              {field.type === 'select' ? (
+                <select
+                  name={field.name}
+                  value={values[field.name]}
+                  onChange={e => handleChange(e, field.type)}
+                  required
+                >
+                  <option value="">Välj...</option>
+                  {field.options.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+              ) : field.type === 'checkbox' ? (
                 <input
                   name={field.name}
                   type="checkbox"
