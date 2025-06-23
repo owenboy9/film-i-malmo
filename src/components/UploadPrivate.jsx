@@ -17,7 +17,9 @@ function UploadPrivate() {
     // Step 1: Upload to Storage
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('private-media')
-      .upload(filePath, file);
+      .upload(filePath, file, {
+        upsert: false,
+      });
 
     if (uploadError) {
       alert('Upload failed: ' + uploadError.message);
