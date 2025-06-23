@@ -40,7 +40,8 @@ function App() {
     <div className="App">
       <BrowserRouter>
       <Header />
-        <Routes>
+        <div className="main-content">
+        <Routes>        
           <Route path="/" element={<><HashRedirector /><Home /></>} />
           <Route path="/schedule" element={ <Schedule /> } />
           <Route path="/contact" element={ <Contact /> } />
@@ -57,8 +58,9 @@ function App() {
           <Route path="/currentpastprojects" element={ <CurrentPastProjects /> } />
           <Route path="/memberinfo" element={ <MemberInfo /> } />  
           <Route path="/test" element={<TestSupabase />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />     
         </Routes>
+        </div>
       <Footer />
       </BrowserRouter>
     </div>

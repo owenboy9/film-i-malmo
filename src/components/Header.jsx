@@ -56,13 +56,11 @@ export default function Header() {
   return (
     <header className={`header ${isHeaderVisible ? 'visible' : 'hidden'}`}>
         
-    <div className="header-logo-container">
-      <NavLink to="/" onClick={() => window.scrollTo(0, 0)} className="logo-link">
-      
-        <FilmiMalmoLogo className="logo" />
-        
-      </NavLink>
-    </div>
+      <div className="header-logo-container">
+        <NavLink to="/" onClick={() => window.scrollTo(0, 0)} className="logo-link">  
+          <FilmiMalmoLogo className="logo" />     
+        </NavLink>
+      </div>
 
 
       <button className="hamburger" onClick={toggleMenu} aria-expanded={isMenuOpen}
