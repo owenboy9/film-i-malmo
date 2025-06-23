@@ -8,15 +8,15 @@ export default function TestDb() {
     table: 'movies',
     fields: [
       { name: 'title', type: 'text' },
-      { name: 'description', type: 'text' }
+      { name: 'description', type: 'text' },
+      { name: 'image_url', type: 'text' }
     ]
   };
   const aboutCrudProps = {
     table: 'about',
     fields: [
       { name: 'title', type: 'text' },
-      { name: 'description', type: 'text' },
-      { name: 'logo_small_path', type: 'text' }
+      { name: 'description', type: 'text' }
     ],
     optionLabels: ['title']
   };

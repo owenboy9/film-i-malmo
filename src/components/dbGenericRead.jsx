@@ -29,7 +29,17 @@ export default function DbGenericRead({ table, fields }) {
             <li key={row.id}>
               {fields.map(f => (
                 <span key={`${row.id}-${f.name}`}>
-                  <strong>{f.name}:</strong> {String(row[f.name])}{' '}
+                  {f.name === 'image_url' && row[f.name] ? (
+                    <img
+                      src={row[f.name]}
+                      alt={row.title || 'bild'}
+                      style={{ maxWidth: 100, verticalAlign: 'middle' }}
+                    />
+                  ) : (
+                    <>
+                      <strong>{f.name}:</strong> {String(row[f.name])}{' '}
+                    </>
+                  )}
                 </span>
               ))}
             </li>
