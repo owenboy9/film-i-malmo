@@ -1,11 +1,10 @@
 .footer {
   position: fixed;
   bottom: 0;
-  height: 4rem;
+  height: 6rem;
   width: 100%;
   background: #004aa0;
-  padding: 15px;
-  
+  background: linear-gradient(90deg, #131414 0%,  #004aa0 50%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -48,12 +47,13 @@
 }
 
 .logo-hypnos {
-    position: absolute;
-    top: 0.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 80px;
-    z-index: 1000;
+  color: #dbbf8b;
+  position: absolute;
+  top: 0.3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 60px;
+  z-index: 1000;
 }
 
 .footer-links {
@@ -67,4 +67,11 @@
     color: #dbbf8b;
     text-decoration: none;
     font-size: 14px;
+}
+.footer-address {
+    position: absolute;
+    bottom: 0.1rem;
+    color: #dbbf8b;
+    font-size: 0.8em;
+    text-align: center;
 }

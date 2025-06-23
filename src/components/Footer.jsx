@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom'; 
 import '../styles/Footer.css';
-import HypnosLogo from '../assets/hypnos_logo.webp';
+import { ReactComponent as HypnosLogo } from '../assets/hypnos_logo.svg';
 
 export default function Header() {
 
@@ -45,15 +45,18 @@ export default function Header() {
     <footer className={`footer ${isFooterVisible ? 'visible' : 'hidden'}`}>
         
         <div className="footer-container">
-            <NavLink to="/Home" onClick={() => {window.scrollTo(0, 0);}} className="logo-link">
-            <img src={HypnosLogo} alt="Film i Malmö Logo" className="logo-hypnos" />
-            </NavLink>
+        <NavLink to="/" onClick={() => window.scrollTo(0, 0)} className="logo-link">
+        <HypnosLogo className="logo-hypnos" />
+        </NavLink>
         </div>
         <div className="footer-links">
             <NavLink to="/Home" className="footer-link">Instagram</NavLink>
             <NavLink to="/About" className="footer-link">Facebook</NavLink>     
         </div>
-     
+        <div className="footer-address">
+          <p>Norra Grängesbergsgatan 15, Malmö</p>
+        </div>
+  
     </footer>
   );
 }

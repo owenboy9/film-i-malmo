@@ -4,6 +4,7 @@
   height: 4rem;
   width: 100%;
   background: #004aa0;
+  background: linear-gradient(90deg, #131414 0%,  #004aa0 50%);
   padding: 15px;
   display: flex;
   justify-content: space-between;
@@ -16,7 +17,7 @@
   .nav-desktop {
     position: absolute;
     bottom: 0rem;
-    right: 3rem;
+    right: 15rem;
     opacity: 0;
     animation: fadeIn 0.8s ease-in-out forwards;
   }
@@ -34,11 +35,18 @@
   right: 3rem;
   z-index: 1000; /* Ensure the hamburger is above other elements */
 }
-
+.header-logo-container {
+  position: absolute;
+  left: 0rem;
+  top: 0.5rem;
+  display: flex;
+  align-items: center;
+}
 .logo {
   position: absolute;
-  top: 0.5rem;
-  left: 2rem;
+  color: #dbbf8b;
+  top: 0rem;
+  left: 0rem;
   height: 80px;
   z-index: 1000;
 }
@@ -85,7 +93,7 @@
   }
   .logo {
     position: absolute;
-    top: 0rem;
+    top: 0.3rem;
     left: 0rem;
     height: 70px;
     z-index: 1000;

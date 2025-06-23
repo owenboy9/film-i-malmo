@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom'; 
 import '../styles/Header.css';
-import FilmiMalmoLogo from '../assets/logo_fim.webp';
+import { ReactComponent as FilmiMalmoLogo } from '../assets/logo_fim.svg';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -56,11 +56,14 @@ export default function Header() {
   return (
     <header className={`header ${isHeaderVisible ? 'visible' : 'hidden'}`}>
         
-      <div className="logo-container">
-        <NavLink to="/" onClick={() => {window.scrollTo(0, 0);}} className="logo-link">
-          <img src={FilmiMalmoLogo} alt="Film i Malmö Logo" className="logo" />
-        </NavLink>
-      </div>
+    <div className="header-logo-container">
+      <NavLink to="/" onClick={() => window.scrollTo(0, 0)} className="logo-link">
+      
+        <FilmiMalmoLogo className="logo" />
+        
+      </NavLink>
+    </div>
+
 
       <button className="hamburger" onClick={toggleMenu} aria-expanded={isMenuOpen}
         aria-label="Toggle navigation menu">
