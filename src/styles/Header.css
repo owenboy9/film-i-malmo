@@ -1,29 +1,40 @@
 .header {
-  position: fixed;
+  position: absolute;
   top: 0;
-  height: 4rem;
+  height: 6rem;
   width: 100%;
-  background: #004aa0;
   background: linear-gradient(90deg, #131414 0%,  #004aa0 50%);
-  padding: 15px;
+  padding: 0 1rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   z-index: 1000;
+  align-items: center; /* Vertically center items */
+  justify-content: space-between; 
 }
 
-  /* Desktop nav */
+/*Logo styles */
+.logo {
+  height: 80px;
+  width: 80px;
+  color: #dbbf8b;
+  top : 0.5rem;
+  left: 6rem;
+  position: absolute;
+}
+.logo:hover {
+  color: white;
+  transform: scale(1.05); 
+}
 
-  .nav-desktop {
-    position: absolute;
-    bottom: 0rem;
-    right: 15rem;
-    opacity: 0;
-    animation: fadeIn 0.8s ease-in-out forwards;
-  }
+/* Desktop nav */
+.nav-desktop {
+  position: absolute;
+  bottom: 0rem;
+  right: 15rem;
+  opacity: 0;
+  animation: fadeIn 0.8s ease-in-out forwards;
+}
 
   /* Responsive styles for the header */
-
 .hamburger {
   font-size: 28px;
   color:  #dbbf8b;
@@ -39,29 +50,11 @@
   color: white;
   transform: scale(1.05); 
 }
-.header-logo-container {
-  position: absolute;
-  left: 0rem;
-  top: 0.5rem;
-}
-.logo {
-  position: absolute;
-  color: #dbbf8b;
-  top: 0rem;
-  left: 0rem;
-  height: 80px;
-  z-index: 1000;
-}
-.logo:hover {
-  color: white;
-  transform: scale(1.05); 
-}
-
+/* Header Hidden and Visible Styles */
 .header.visible {
   transform: translateY(0);
   animation: fadeInHeader 1s ease-in-out forwards;
 }
-
 @keyframes fadeInHeader {
   from {
     transform: translateY(-100%);
@@ -72,72 +65,63 @@
     opacity: 1;
   }
 }
-
 .header.hidden {
   transform: translateY(-100%);
   animation: fadeOutHeader 1s ease-in-out forwards;
-
 }
-
 @keyframes fadeOutHeader {
   from {
     transform: translateY(0);
     opacity: 1;
-
-
   }
   to {
     transform: translateY(-100%);
     opacity: 0;
-
   }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 890px) {
   .header {
     height: 3rem;   
   }
   .logo {
-    position: absolute;
-    height: 60px;
-    z-index: 1000;
-  }
-  
+    top: 0.2rem;
+    height: 40px;
+    width: 40px;
+  } 
+}
+/* Nav styles */
+.nav-desktop ul {
+  display: flex;
+  color: white;
+  gap: 20px;
+  list-style: none;
 }
 
-  .nav-desktop ul {
-    display: flex;
-    color: white;
-    gap: 20px;
-    list-style: none;
-  }
-  
-  .nav {
-    display: flex;
-    justify-content: right;
-  }
-  
-  .headerbtn {
-    color: white;
-    text-decoration: none;
-    font-size: 1.3em;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s, transform 0.3s;
-  }
-  .headerbtn:hover {
-    color:  #dbbf8b; 
-    text-decoration: underline;
-  }
-  .headerbtn.active {
-    color:  #dbbf8b;
-  }
-  .header h1{
-    text-align: start;
-    margin-left: 1rem;
-    font-size: 1.5rem;
-  }
+.nav {
+  display: flex;
+  justify-content: right;
+}
 
-/* Header styles for mobile */
+.headerbtn {
+  color: white;
+  text-decoration: none;
+  font-size: 1.3em;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s;
+}
+.headerbtn:hover {
+  color:  #dbbf8b; 
+  text-decoration: underline;
+}
+.headerbtn.active {
+  color:  #dbbf8b;
+}
+.header h1{
+  text-align: start;
+  margin-left: 1rem;
+  font-size: 1.5rem;
+}
 
 /* Nav menu for mobile */
 .nav-menu {
@@ -175,13 +159,11 @@
     display: block;
     animation: fadeIn 1s ease-in-out forwards;
   }
-
   .nav-desktop {
     display: none;
   }
 
 }
-
 /* keyframes for smooth fade */
 @keyframes fadeIn {
   to {
@@ -189,12 +171,7 @@
   }
 }
 
-/* Ensure hidden header is still accessible */
-.header.hidden {
-  transform: translateY(-100%); /* Your hide animation */
-  visibility: visible; /* Keep focusable */
-  position: fixed; /* Ensure it stays in DOM */
-}
+
 
 
 

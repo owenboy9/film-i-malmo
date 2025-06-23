@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom'; 
 import '../styles/Header.css';
 import { ReactComponent as FilmiMalmoLogo } from '../assets/logo_fim.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -56,11 +58,11 @@ export default function Header() {
   return (
     <header className={`header ${isHeaderVisible ? 'visible' : 'hidden'}`}>
         
-      <div className="header-logo-container">
-        <NavLink to="/" onClick={() => window.scrollTo(0, 0)} className="logo-link">  
+
+        <NavLink to="/" onClick={() => window.scrollTo(0, 0)}>
           <FilmiMalmoLogo className="logo" />     
         </NavLink>
-      </div>
+
 
 
       <button className="hamburger" onClick={toggleMenu} aria-expanded={isMenuOpen}
@@ -106,11 +108,6 @@ export default function Header() {
       <nav className="nav-desktop">
         <ul>
           <li>
-            <NavLink to="/" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
-              Home
-            </NavLink>
-          </li>
-          <li>
             <NavLink to="/schedule" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
               Schedule
             </NavLink>
@@ -133,6 +130,11 @@ export default function Header() {
           <li>
             <NavLink to="/TestDB" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
               TestDB
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
+            <FontAwesomeIcon icon={faUser} className="header-icon" />
             </NavLink>
           </li>
         </ul>

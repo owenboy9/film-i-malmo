@@ -1,48 +1,45 @@
 .footer {
   position: fixed;
   bottom: 0;
+  left: 0;
   height: 6rem;
   width: 100%;
   background: #004aa0;
   background: linear-gradient(90deg, #131414 0%,  #004aa0 50%);
   display: flex;
   justify-content: center;
-  align-items: center;
   z-index: 1000;
 }
 
 .footer.visible {
-  transform: translateY(0);
+  transform: translateY(100%);
   animation: fadeInFooter 1s ease-in-out forwards;
 }
 
 @keyframes fadeInFooter {
   from {
-    transform: translateY(200%);
+    transform: translateY(100%);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translateY(0rem);
     opacity: 1;
   }
 }
 
 .footer.hidden {
-  transform: translateY(200%);
+  transform: translateY(6rem);
   animation: fadeOutFooter 1s ease-in-out forwards;
-
 }
+
 @keyframes fadeOutFooter {
   from {
     transform: translateY(0);
     opacity: 1;
-
-
   }
   to {
-    transform: translateY(200%);
+    transform: translateY(6rem);
     opacity: 0;
-
   }
 }
 
@@ -53,6 +50,7 @@
   left: 50%;
   transform: translateX(-50%);
   height: 60px;
+  width: 60px;
   z-index: 1000;
 }
 .logo-hypnos:hover {
@@ -63,10 +61,9 @@
 .footer-links {
     position: absolute;
     top: 1.5rem;
-    right: 3rem;
+    right: 6rem;
     display: flex;
-    gap: 0.5rem;
-    z-index: 1000;
+    gap: 1rem;
 }
 .footer_link a{
     color: #dbbf8b;
@@ -88,4 +85,10 @@
 .footer-icon:hover {
     color: #ffffff;
     transform: scale(1.05);
+}
+@media (max-width: 768px) {
+  .logo-hypnos {
+    height: 50px;
+    width: 50px;
+  }
 }
