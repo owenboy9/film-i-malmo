@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { supabase } from '../supabase'
+import { useNavigate } from 'react-router-dom';
 
 export default function Auth() {
   const [mode, setMode] = useState(null) // null, 'login', 'signup', or 'reset'
@@ -11,11 +12,15 @@ export default function Auth() {
   const [birthDate, setBirthDate] = useState('')
   const [phone, setPhone] = useState('')
   const [address, setAddress] = useState('')
+  const [addressStreet, setAddressStreet] = useState('');
+  const [addressStNum, setAddressStNum] = useState('');
+  const [addressCity, setAddressCity] = useState('');
   const [payment, setPayment] = useState('Credit Card')
   const [newsletter, setNewsletter] = useState(false)
   const [error, setError] = useState(null)
   const [signupMessage, setSignupMessage] = useState('')
   const [resetMessage, setResetMessage] = useState('')
+  const navigate = useNavigate();
 
   const handleSignUp = async () => {
     setError(null)
@@ -25,7 +30,8 @@ export default function Auth() {
       return
     }
     const displayName = `${firstName} ${lastName}`.trim()
-    const { error } = await supabase.auth.signUp({
+    // 1. Sign up with Supabase Auth
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -33,35 +39,45 @@ export default function Auth() {
           display_name: displayName,
           birth_date: birthDate,
           phone: phone || null,
-          address,
-          payment,
+          address_street: addressStreet,
+          address_st_num: addressStNum,
+          address_city: addressCity,
           newsletter,
         }
       }
     })
     if (error) {
       setError(error.message)
-    } else {
-      setSignupMessage('Please confirm your signup before logging in.')
-      setMode(null)
-      setFirstName('')
-      setLastName('')
-      setEmail('')
-      setPassword('')
-      setConfirmPassword('')
-      setBirthDate('')
-      setPhone('')
-      setAddress('')
-      setPayment('Credit Card')
-      setNewsletter(false)
+      return
     }
+
+    setSignupMessage('Please confirm your signup before logging in.')
+    setMode(null)
+    setFirstName('')
+    setLastName('')
+    setEmail('')
+    setPassword('')
+    setConfirmPassword('')
+    setBirthDate('')
+    setPhone('')
+    setAddress('')
+    setPayment('Credit Card')
+    setNewsletter(false)
   }
 
   const handleSignIn = async () => {
     setError(null)
     setSignupMessage('')
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    setError(error?.message)
+    if (error) {
+      setError(error.message)
+      // If the error is about email not confirmed, resend confirmation
+      if (error.message && error.message.toLowerCase().includes('confirm')) {
+        await handleResendConfirmation(email);
+      }
+      return;
+    }
+    navigate('/');
   }
 
   const handleResetPassword = async () => {
@@ -76,6 +92,19 @@ export default function Auth() {
       setEmail('')
     }
   }
+
+  const handleResendConfirmation = async (email) => {
+    setError(null);
+    // Supabase does not have a direct resend method in the client SDK,
+    // so you need to trigger the signUp endpoint again with the same email.
+    // This will resend the confirmation email if the user is not confirmed.
+    const { error } = await supabase.auth.signUp({ email, password: 'dummy' });
+    if (error) {
+      setError('Failed to resend confirmation email: ' + error.message);
+    } else {
+      setSignupMessage('A new confirmation email has been sent. Please check your inbox.');
+    }
+  };
 
   if (signupMessage) {
     return (
@@ -157,12 +186,25 @@ export default function Auth() {
             placeholder="Phone (e.g. 0701234567)"
             value={phone}
             onChange={e => setPhone(e.target.value)}
-          /><br/>
+          />
+         <br/>
           <input
             type="text"
-            placeholder="Address"
-            value={address}
-            onChange={e => setAddress(e.target.value)}
+            placeholder="Street"
+            value={addressStreet}
+            onChange={e => setAddressStreet(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Street Number"
+            value={addressStNum}
+            onChange={e => setAddressStNum(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="City"
+            value={addressCity}
+            onChange={e => setAddressCity(e.target.value)}
           /><br/>
           <label>
             Payment info:&nbsp;
