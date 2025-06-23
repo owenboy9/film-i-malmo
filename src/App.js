@@ -5,8 +5,11 @@ import Home from './pages/home'
 import Contact from './pages/contact'
 import About from './pages/about';
 import TestDb from './pages/testdb';
-import TestSupabase from './TestSupabase'
-import ResetPasswordPage from './pages/ResetPasswordPage'
+import TestSupabase from './TestSupabase';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import BuyMembership from './pages/BuyMembership';
+import Payment from './pages/Payment';
+import MembershipConfirmation from './pages/MembershipConfirmation';
 
 function HashRedirector() {
   const navigate = useNavigate();
@@ -34,6 +37,9 @@ function App() {
           <Route path="/testdb" element={ <TestDb /> } />
           <Route path="/test" element={<TestSupabase />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/buy-membership" element={<BuyMembership />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/membership-confirmation" element={<MembershipConfirmation />} />
         </Routes>
       </BrowserRouter>
     </div>

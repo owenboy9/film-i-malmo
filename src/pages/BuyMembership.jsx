@@ -5,20 +5,31 @@ import MembershipOption from '../components/MembershipOption'
 
 export default function BuyMembership() {
   const [user, setUser] = useState(null)
+  const [membership, setMembership] = useState(null)
   const [selectedPlan, setSelectedPlan] = useState(null)
   const navigate = useNavigate()
 
   // Check if user is authenticated
   useEffect(() => {
-    const getUser = async () => {
-      const { data, error } = await supabase.auth.getUser()
-      if (error || !data.user) {
-        navigate('/login') // redirect if not logged in
-      } else {
-        setUser(data.user)
+    const getUserAndMembership = async () => {
+      const { data: userData, error: userError } = await supabase.auth.getUser()
+      if (userError || !userData.user) {
+        navigate('/login')
+        return
+      }
+      setUser(userData.user)
+
+      const { data: membershipData, error: membershipError } = await supabase
+        .from('user_membership')
+        .select('last_payment, valid_through')
+        .eq('id', userData.user.id)
+        .single()
+
+      if (!membershipError && membershipData) {
+        setMembership(membershipData)
       }
     }
-    getUser()
+    getUserAndMembership()
   }, [navigate])
 
   const handleSelectPlan = (plan) => {
@@ -31,10 +42,14 @@ export default function BuyMembership() {
 
   const handleProceed = () => {
     // pass selected plan to payment page, e.g., via URL param or context
-    navigate(`/payment?plan=${selectedPlan}`)
+    navigate('/payment', { state: { selectedPlan } })
   }
 
   if (!user) return null // don't render until user is verified
+  
+  const today = new Date()
+  const validThroughDate = membership?.valid_through ? new Date(membership.valid_through) : null
+  const isMembershipValid = validThroughDate && validThroughDate > today
 
   return (
     <div style={{ padding: '2rem' }}>
@@ -74,6 +89,19 @@ export default function BuyMembership() {
             You have chosen to pay for a <strong>{selectedPlan.label}</strong> membership
             for <strong>{selectedPlan.price} SEK</strong>.
         </p>
+
+        {isMembershipValid && (
+            <p>
+                Your membership is still valid through{' '}
+                <strong>{validThroughDate.toLocaleDateString()}</strong>. Do you want to add a new
+                membership period of{' '}
+                <strong>
+                    {selectedPlan.duration === '2m' ? '2 months' : 'one year'}
+                </strong>{' '}
+                to it?
+            </p>    
+
+        )}
 
           <button onClick={handleGoBack}>Go Back</button>
           <button onClick={handleProceed} style={{ marginLeft: '1rem' }}>

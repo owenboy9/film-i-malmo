@@ -5,28 +5,39 @@ import { supabase } from '../supabase'
 export default function MembershipConfirmation() {
   const navigate = useNavigate()
   const location = useLocation()
-  const [user, setUser] = useState(null)
 
+  const [user, setUser] = useState(null)
+  const [membership, setMembership] = useState(null)
   const selectedPlan = location.state?.selectedPlan
-  const validThrough = location.state?.validThrough
+  const validThrough = membership?.valid_through ? new Date(membership.valid_through) : null
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser()
-      if (error || !data.user) {
+    const getUserAndMembership = async () => {
+      const { data: userData, error: userError } = await supabase.auth.getUser()
+      if (userError || !userData.user) {
         navigate('/login')
-      } else {
-        setUser(data.user)
+        return
+      }
+      setUser(userData.user)
+
+      const { data: membershipData, error: membershipError } = await supabase
+        .from('user_membership')
+        .select('last_payment, valid_through')
+        .eq('id', userData.user.id)
+        .single()
+
+      if (!membershipError && membershipData) {
+        setMembership(membershipData)
       }
     }
-    fetchUser()
+    getUserAndMembership()
   }, [navigate])
 
   // Redirect after 5 seconds on success
   useEffect(() => {
     if (selectedPlan && validThrough) {
       const timer = setTimeout(() => {
-        navigate('/my-membership')
+        navigate('/about')
       }, 5000)
       return () => clearTimeout(timer)
     }

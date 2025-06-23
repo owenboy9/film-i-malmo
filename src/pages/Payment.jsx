@@ -11,6 +11,7 @@ export default function Payment() {
   const [paymentMethod, setPaymentMethod] = useState('Credit Card')
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState('')
+  
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -25,36 +26,38 @@ export default function Payment() {
   }, [navigate])
 
   const handleConfirmPayment = async () => {
-    setIsProcessing(true)
-    setError('')
-
-    const today = new Date()
-    const validThrough = new Date(today)
-
-    if (selectedPlan.duration === '2m') {
-      validThrough.setMonth(validThrough.getMonth() + 2)
-    } else if (selectedPlan.duration === '12m') {
-      validThrough.setFullYear(validThrough.getFullYear() + 1)
+    if (!user) {
+        setError('User not loaded yet.');
+        return;
+    }
+    if (!selectedPlan) {
+        setError('No membership plan selected.');
+        return;
     }
 
-    const todayDate = today.toISOString().split('T')[0]
-    const validThroughDate = validThrough.toISOString().split('T')[0]
+    setIsProcessing(true);
+    setError('');
 
-    const { error: dbError } = await supabase
-      .from('user_membership')
-      .upsert({
-        user_id: user.id,
-        last_payment: todayDate,
-        valid_through: validThroughDate
-      }, { onConflict: 'user_id' })
+    const { error: rpcError } = await supabase.rpc('update_membership', {
+        uid: user.id,
+        duration: selectedPlan.duration,
+    });
 
-    if (dbError) {
-      setError('Payment failed: ' + dbError.message)
-      setIsProcessing(false)
+    if (rpcError) {
+        setError('Payment failed: ' + rpcError.message);
+        setIsProcessing(false);
     } else {
-      navigate('/membership-confirmation', { state: { selectedPlan, validThrough } })
+        const today = new Date();
+        const validThrough = new Date(today);
+        if (selectedPlan.duration === '2m') {
+        validThrough.setMonth(validThrough.getMonth() + 2);
+        } else if (selectedPlan.duration === '12m') {
+        validThrough.setFullYear(validThrough.getFullYear() + 1);
+        }
+
+        navigate('/membership-confirmation', { state: { selectedPlan, validThrough } });
     }
-  }
+  };
 
   if (!selectedPlan) {
     return (
@@ -63,7 +66,7 @@ export default function Payment() {
         <button onClick={() => navigate('/buy-membership')}>Go back</button>
       </div>
     )
-  }
+  } 
 
   return (
     <div>
