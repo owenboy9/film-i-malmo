@@ -35,12 +35,14 @@
   right: 3rem;
   z-index: 1000; /* Ensure the hamburger is above other elements */
 }
+.hamburger:hover {
+  color: white;
+  transform: scale(1.05); 
+}
 .header-logo-container {
   position: absolute;
   left: 0rem;
   top: 0.5rem;
-  display: flex;
-  align-items: center;
 }
 .logo {
   position: absolute;
@@ -49,6 +51,10 @@
   left: 0rem;
   height: 80px;
   z-index: 1000;
+}
+.logo:hover {
+  color: white;
+  transform: scale(1.05); 
 }
 
 .header.visible {
@@ -93,11 +99,8 @@
   }
   .logo {
     position: absolute;
-    top: 0.3rem;
-    left: 0rem;
-    height: 70px;
+    height: 60px;
     z-index: 1000;
-    opacity: 1;
   }
   
 }
@@ -109,7 +112,7 @@
     list-style: none;
   }
   
-  nav{
+  .nav {
     display: flex;
     justify-content: right;
   }
@@ -123,7 +126,7 @@
   }
   .headerbtn:hover {
     color:  #dbbf8b; 
-    transform: scale(1.05); /* Slightly enlarge the button on hover */
+    text-decoration: underline;
   }
   .headerbtn.active {
     color:  #dbbf8b;
@@ -167,7 +170,7 @@
   color: #dbbf8b;
 }
 
-@media (max-width: 868px) {
+@media (max-width: 900px) {
   .hamburger {
     display: block;
     animation: fadeIn 1s ease-in-out forwards;
@@ -183,14 +186,6 @@
 @keyframes fadeIn {
   to {
     opacity: 1;
-  }
-}
-
-@media (max-width: 600px) {
-  .portfolio {
-    height: 45px;
-    top: 0rem;
-    left: 0rem;
   }
 }
 

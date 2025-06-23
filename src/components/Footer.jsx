@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom'; 
 import '../styles/Footer.css';
 import { ReactComponent as HypnosLogo } from '../assets/hypnos_logo.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
+
 
 export default function Header() {
 
@@ -50,8 +53,12 @@ export default function Header() {
         </NavLink>
         </div>
         <div className="footer-links">
-            <NavLink to="/Home" className="footer-link">Instagram</NavLink>
-            <NavLink to="/About" className="footer-link">Facebook</NavLink>     
+        <a href="https://www.instagram.com/filmimalmo" target="_blank" rel="noopener noreferrer" className="footer-icon-link">
+          <FontAwesomeIcon icon={faInstagram} className="footer-icon" />
+        </a>
+        <a href="https://www.facebook.com/filmimalmo" target="_blank" rel="noopener noreferrer" className="footer-icon-link">
+          <FontAwesomeIcon icon={faFacebook} className="footer-icon" />
+        </a>   
         </div>
         <div className="footer-address">
           <p>Norra Grängesbergsgatan 15, Malmö</p>
