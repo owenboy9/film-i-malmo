@@ -1,33 +1,14 @@
 import React, { useState } from 'react'
-
-// Generate a random math question
-function generateHumanQuestion() {
-  const a = Math.floor(Math.random() * 10) + 1
-  const b = Math.floor(Math.random() * 10) + 1
-  return {
-    question: `What is ${a} + ${b}?`,
-    answer: (a + b).toString()
-  }
-}
+import ReCAPTCHA from 'react-google-recaptcha'
 
 export default function Contact() {
   const [subject, setSubject] = useState('')
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [content, setContent] = useState('')
-  const [human, setHuman] = useState('')
+  const [captchaToken, setCaptchaToken] = useState(null)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  const [humanQ, setHumanQ] = useState(generateHumanQuestion())
-
-  const resetForm = () => {
-    setSubject('')
-    setEmail('')
-    setName('')
-    setContent('')
-    setHuman('')
-    setHumanQ(generateHumanQuestion())
-  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -36,18 +17,19 @@ export default function Contact() {
 
     if (!subject || !email || !name || !content) {
       setError('Please fill in all fields.')
-      setHumanQ(generateHumanQuestion())
       return
     }
-    if (human.trim() !== humanQ.answer) {
-      setError('Human validation failed.')
-      setHuman('')
-      setHumanQ(generateHumanQuestion())
+    if (!captchaToken) {
+      setError('Please complete the reCAPTCHA.')
       return
     }
-    // Here you would send the form data to your backend or email service
+    // Here you would send the form data and captchaToken to your backend or email service
     setSuccess('Thank you for contacting us!')
-    resetForm()
+    setSubject('')
+    setEmail('')
+    setName('')
+    setContent('')
+    setCaptchaToken(null)
   }
 
   return (
@@ -77,15 +59,10 @@ export default function Contact() {
           value={content}
           onChange={e => setContent(e.target.value)}
         /><br/>
-        <label>
-          {humanQ.question}
-          <input
-            type="text"
-            placeholder="Answer"
-            value={human}
-            onChange={e => setHuman(e.target.value)}
-          />
-        </label>
+        <ReCAPTCHA
+          sitekey="6LfawGUrAAAAABe59Eg9pbpqYaqLQmail6DL14Un"
+          onChange={token => setCaptchaToken(token)}
+        />
         <br/>
         <button type="submit">Send</button>
       </form>
