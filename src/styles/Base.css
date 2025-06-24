@@ -24,3 +24,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* Light theme (default) */
+body.light {
+  background-color: #fff;
+  color: #333;
+}
+
+/* Dark theme */
+body.dark {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+

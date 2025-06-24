@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import '../styles/Header.css';
 import { ReactComponent as FilmiMalmoLogo } from '../assets/logo_fim.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,6 +12,25 @@ export default function Header() {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
+
+  // Dark mode toggle
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+  // Check localStorage or default to false
+  return localStorage.getItem('theme') === 'dark';
+});
+
+const toggleTheme = () => {
+  setIsDarkMode((prev) => {
+    const newMode = !prev;
+    localStorage.setItem('theme', newMode ? 'dark' : 'light');
+    return newMode;
+  });
+};
+
+  // Apply dark mode class to body
+useEffect(() => {
+  document.body.className = isDarkMode ? 'dark' : 'light';
+}, [isDarkMode]);
 
   // Close menu on Esc key
   useEffect(() => {
@@ -73,8 +92,8 @@ export default function Header() {
       <nav className={`nav-menu ${isMenuOpen ? 'open' : ''}`}>
         <ul>
           <li>
-            <NavLink to="/" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
-            Home
+            <NavLink to="/" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
+            <FontAwesomeIcon icon={faUser} className="header-icon" />
             </NavLink>
           </li>
           <li>
@@ -102,11 +121,24 @@ export default function Header() {
             TestDB
             </NavLink>
           </li>
+          <li>
+          <span onClick={toggleTheme}>
+            <FontAwesomeIcon
+              icon={isDarkMode ? faMoon : faSun}
+              className="dark-light-icon"
+            />
+          </span>
+          </li>
         </ul>
       </nav>
 
       <nav className="nav-desktop">
         <ul>
+          <li>
+            <NavLink to="/" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
+            <FontAwesomeIcon icon={faUser} className="header-icon" />
+            </NavLink>
+          </li>
           <li>
             <NavLink to="/schedule" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
               Schedule
@@ -133,9 +165,12 @@ export default function Header() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
-            <FontAwesomeIcon icon={faUser} className="header-icon" />
-            </NavLink>
+          <span onClick={toggleTheme}>
+            <FontAwesomeIcon
+              icon={isDarkMode ? faMoon : faSun}
+              className="dark-light-icon"
+            />
+          </span>
           </li>
         </ul>
       </nav>
