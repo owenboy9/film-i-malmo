@@ -48,6 +48,8 @@ export default function AccountSettings() {
   const [searchTerm, setSearchTerm] = useState('');
   const [membershipPopup, setMembershipPopup] = useState(null); // For popup data
   const [popupUserId, setPopupUserId] = useState(null); // For which user to show
+  const [pendingRenewal, setPendingRenewal] = useState(null);
+  const [joinedUsers, setJoinedUsers] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -135,13 +137,37 @@ export default function AccountSettings() {
     }
   }, [popupUserId]);
 
+  // Fetch joined users data
+  const fetchJoinedUsers = async () => {
+    const { data: users, error: userError } = await supabase.from('users').select('id, first_name, last_name, email');
+    const { data: memberships, error: memError } = await supabase.from('user_membership').select('id, valid_through');
+    console.log('users:', users, 'memberships:', memberships, userError, memError);
+    if (!userError && !memError) {
+      const merged = users.map(u => ({
+        ...u,
+        user_membership: memberships.find(m => m.id === u.id)
+      }));
+      setJoinedUsers(merged);
+    } else {
+      setJoinedUsers([]);
+    }
+  };
+
+  const isSuperuser = membership?.role === 'superuser';
+  const isAdmin = membership?.role === 'admin' || membership?.role === 'superuser';
+  const birthDate = user?.user_metadata?.birth_date || '';
+
+// Place the useEffect here, after fetchJoinedUsers and isAdmin are defined:
+useEffect(() => {
+  if (isAdmin) {
+    fetchJoinedUsers();
+  }
+}, [isAdmin]);
   if (!user) {
     return <Auth />;
   }
   
-  const isSuperuser = membership?.role === 'superuser';
-  const isAdmin = membership?.role === 'admin' || membership?.role === 'superuser';
-  const birthDate = user.user_metadata?.birth_date || '';
+
 
   // Helper to display address
   const formatAddress = (user) => {
@@ -401,7 +427,7 @@ export default function AccountSettings() {
           <h4>All Members (Database Table)</h4>
           <input
             type="text"
-            placeholder="Search by UID, First, Last Name or Email"
+            placeholder="Search by First, Last Name or Email"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             style={{ marginBottom: 8, width: 300 }}
@@ -410,33 +436,38 @@ export default function AccountSettings() {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>ID</th>
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>First Name</th>
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>Last Name</th>
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>Email</th>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>Birth Date</th>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>Street</th>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>Street Num</th>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>City</th>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>Newsletter</th>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>Created At</th>
+                  <th style={{ border: '1px solid #ccc', padding: 4 }}>Valid Through</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredDbUsers.map(u => (
-                  <tr key={u.id} style={{ cursor: 'pointer' }} onClick={() => setPopupUserId(u.id)}>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.id}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.first_name}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.last_name}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.email}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.birth_date}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.address_street}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.address_st_num}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.address_city}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.newsletter ? 'Yes' : 'No'}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.created_at}</td>
-                  </tr>
-                ))}
+                {joinedUsers
+                  .filter(u => {
+                    const term = searchTerm.toLowerCase();
+                    return (
+                      u.first_name?.toLowerCase().includes(term) ||
+                      u.last_name?.toLowerCase().includes(term) ||
+                      u.email?.toLowerCase().includes(term)
+                    );
+                  })
+                  .map(u => (
+                    <tr
+                      key={u.id}
+                      style={{ border: '1px solid #ccc', padding: 4, cursor: 'pointer' }}
+                      onClick={() => setPopupUserId(u.id)}
+                    >
+                      <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.first_name}</td>
+                      <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.last_name}</td>
+                      <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.email}</td>
+                      <td style={{ border: '1px solid #ccc', padding: 4 }}>
+                        {u.user_membership?.valid_through
+                          ? new Date(u.user_membership.valid_through).toISOString().slice(0, 10)
+                          : ''}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
@@ -706,65 +737,104 @@ export default function AccountSettings() {
             <h3>User Membership Info</h3>
             <b>UID:</b> {membershipPopup.id}<br />
             <b>Role:</b> {membershipPopup.role}<br />
-            <b>Is Member:</b> {membershipPopup.is_member ? 'Yes' : 'No'}<br />
-            <b>Last Payment:</b> {membershipPopup.last_payment || ''}<br />
-            <b>Valid Through:</b> {membershipPopup.valid_through || ''}<br />
+            <b>Is Member:</b> {(pendingRenewal ? pendingRenewal.is_member : membershipPopup.is_member) ? 'Yes' : 'No'}<br />
+            <b>Last Payment:</b> {
+              (pendingRenewal ? pendingRenewal.last_payment : membershipPopup.last_payment)
+                ? new Date(pendingRenewal ? pendingRenewal.last_payment : membershipPopup.last_payment).toISOString().slice(0,10)
+                : ''
+            }<br />
+            <b>Valid Through:</b>{' '}
+            <input
+              type="date"
+              value={
+                (pendingRenewal ? pendingRenewal.valid_through : membershipPopup.valid_through)
+                  ? new Date(pendingRenewal ? pendingRenewal.valid_through : membershipPopup.valid_through).toISOString().slice(0,10)
+                  : ''
+              }
+              onChange={e => {
+                const newDate = e.target.value;
+                setPendingRenewal(prev => ({
+                  ...(prev || {
+                    last_payment: (pendingRenewal ? pendingRenewal.last_payment : membershipPopup.last_payment),
+                    is_member: (pendingRenewal ? pendingRenewal.is_member : membershipPopup.is_member)
+                  }),
+                  valid_through: new Date(newDate).toISOString()
+                }));
+              }}
+              style={{ marginBottom: 4 }}
+            />
+            <br />
 
             <div style={{ marginTop: 16 }}>
               <b>Renew Membership:</b><br />
-              <button onClick={async () => {
+              <button onClick={() => {
                 const now = new Date();
-                const validThrough = new Date(now);
-                validThrough.setMonth(validThrough.getMonth() + 2);
-                await supabase.from('user_membership').update({
-                  last_payment: now.toISOString(),
-                  valid_through: validThrough.toISOString(),
-                  is_member: true
-                }).eq('id', popupUserId);
-
-                // Refresh popup and superuser table
-                const { data } = await supabase.from('user_membership').select('*').eq('id', popupUserId).single();
-                setMembershipPopup(data);
-                await fetchAllMemberships();
-
-                // Refresh own membership if updated
-                if (user && popupUserId === user.id) {
-                  const { data: selfMembership } = await supabase
-                    .from('user_membership')
-                    .select('*')
-                    .eq('id', user.id)
-                    .single();
-                  setMembership(selfMembership);
+                // Use the latest valid_through (pending or from DB), whichever is later
+                let baseDate = now;
+                const currentValid = pendingRenewal?.valid_through || membershipPopup.valid_through;
+                if (currentValid && new Date(currentValid) > now) {
+                  baseDate = new Date(currentValid);
                 }
-              }} style={{ marginRight: 8 }}>2 Months</button>
-              <button onClick={async () => {
-                const now = new Date();
-                const validThrough = new Date(now);
-                validThrough.setFullYear(validThrough.getFullYear() + 1);
-                await supabase.from('user_membership').update({
+                const validThrough = new Date(baseDate);
+                validThrough.setMonth(validThrough.getMonth() + 2);
+                setPendingRenewal({
                   last_payment: now.toISOString(),
                   valid_through: validThrough.toISOString(),
                   is_member: true
-                }).eq('id', popupUserId);
-
-                // Refresh popup and superuser table
-                const { data } = await supabase.from('user_membership').select('*').eq('id', popupUserId).single();
-                setMembershipPopup(data);
-                await fetchAllMemberships();
+                });
+              }} style={{ marginRight: 8 }}>2 Months</button>
+              <button onClick={() => {
+                const now = new Date();
+                let baseDate = now;
+                const currentValid = pendingRenewal?.valid_through || membershipPopup.valid_through;
+                if (currentValid && new Date(currentValid) > now) {
+                  baseDate = new Date(currentValid);
+                }
+                const validThrough = new Date(baseDate);
+                validThrough.setFullYear(validThrough.getFullYear() + 1);
+                setPendingRenewal({
+                  last_payment: now.toISOString(),
+                  valid_through: validThrough.toISOString(),
+                  is_member: true
+                });
               }} style={{ marginRight: 8 }}>1 Year</button>
               <button onClick={async () => {
-                await supabase.from('user_membership').update({
+                setPendingRenewal({
                   valid_through: null,
                   is_member: false
-                }).eq('id', popupUserId);
-
-                // Refresh popup and superuser table
-                const { data } = await supabase.from('user_membership').select('*').eq('id', popupUserId).single();
-                setMembershipPopup(data);
-                await fetchAllMemberships();
+                });
               }} style={{ background: 'red', color: 'white' }}>Remove Membership</button>
             </div>
-            <button style={{ marginTop: 16 }} onClick={() => setPopupUserId(null)}>Close</button>
+            <div style={{ marginTop: 16 }}>
+              <button onClick={() => {
+                setPendingRenewal(null);
+                setPopupUserId(null);
+              }}>Cancel</button>
+              <button
+                style={{ marginLeft: 8 }}
+                disabled={!pendingRenewal}
+                onClick={async () => {
+                  if (pendingRenewal) {
+                    await supabase.from('user_membership').update(pendingRenewal).eq('id', popupUserId);
+                    // Refresh popup and superuser table
+                    const { data } = await supabase.from('user_membership').select('*').eq('id', popupUserId).single();
+                    setMembershipPopup(data);
+                    await fetchAllMemberships();
+                    // Refresh own membership if updated
+                    if (user && popupUserId === user.id) {
+                      const { data: selfMembership } = await supabase
+                        .from('user_membership')
+                        .select('*')
+                        .eq('id', user.id)
+                        .single();
+                      setMembership(selfMembership);
+                    }
+                  }
+                  setPendingRenewal(null);
+                  setPopupUserId(null);
+                }}
+              >Save</button>
+            </div>
           </div>
         </div>
       )}

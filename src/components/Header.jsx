@@ -4,11 +4,13 @@ import '../styles/Header.css';
 import { ReactComponent as FilmiMalmoLogo } from '../assets/logo_fim.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { supabase } from '../supabase';
 
-export default function Header() {
+export default function Header({ setShowAuth, user }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -55,11 +57,17 @@ export default function Header() {
     };
   }, [lastScrollY]);
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setShowLogoutPopup(false);
+    window.location.reload();
+  };
+
   return (
     <header className={`header ${isHeaderVisible ? 'visible' : 'hidden'}`}>
         
 
-        <NavLink to="/" onClick={() => window.scrollTo(0, 0)}>
+        <NavLink to="/" onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}>
           <FilmiMalmoLogo className="logo" />     
         </NavLink>
 
@@ -77,6 +85,7 @@ export default function Header() {
             Home
             </NavLink>
           </li>
+          
           <li>
             <NavLink to="/Schedule" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
             Schedule
@@ -102,43 +111,99 @@ export default function Header() {
             TestDB
             </NavLink>
           </li>
+          <li>
+            <NavLink to="/account-settings" onClick={() => { toggleMenu(); setShowAuth(false); window.scrollTo(0, 0); }} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
+              My Membership
+            </NavLink>
+          </li>
         </ul>
       </nav>
 
       <nav className="nav-desktop">
         <ul>
           <li>
-            <NavLink to="/schedule" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
+            <NavLink
+              to="/schedule"
+              onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
+              className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
+            >
               Schedule
             </NavLink>
           </li>
           <li>
-            <NavLink to="/about" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
+            <NavLink
+              to="/about"
+              onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
+              className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
+            >
               About
             </NavLink>
           </li>
           <li>
-            <NavLink to="/contact" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
+            <NavLink
+              to="/contact"
+              onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
+              className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
+            >
               Contact
             </NavLink>
           </li>
           <li>
-            <NavLink to="/more" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
+            <NavLink
+              to="/more"
+              onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
+              className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
+            >
               More
             </NavLink>
           </li>
           <li>
-            <NavLink to="/TestDB" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
+            <NavLink
+              to="/TestDB"
+              onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
+              className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
+            >
               TestDB
             </NavLink>
           </li>
           <li>
-            <NavLink to="/" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
-            <FontAwesomeIcon icon={faUser} className="header-icon" />
+            <NavLink
+              to="/account-settings"
+              onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
+              className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
+            >
+              My Membership
             </NavLink>
+          </li>
+          <li>
+            <button
+              className="headerbtn"
+              style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+              onClick={() => {
+                if (user) {
+                  setShowLogoutPopup(true);
+                } else {
+                  setShowAuth(true);
+                }
+              }}
+            >
+              <FontAwesomeIcon icon={faUser} className="header-icon" />
+            </button>
           </li>
         </ul>
       </nav>
+      {showLogoutPopup && (
+        <div className="logout-popup" style={{
+          position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+          background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
+        }}>
+          <div style={{ background: '#fff', padding: 24, borderRadius: 8, minWidth: 250, textAlign: 'center' }}>
+            <p>Do you want to log out?</p>
+            <button onClick={handleLogout} style={{ marginRight: 12 }}>Yes</button>
+            <button onClick={() => setShowLogoutPopup(false)}>Cancel</button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

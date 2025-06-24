@@ -23,6 +23,7 @@ import AccountSettings from './pages/AccountSettings'
 import EditAccountSettings from './pages/EditAccountSettings'
 import { supabase } from './supabase';
 import Calendar from './pages/Calendar';
+import Auth from './components/Auth'; // Make sure this is imported
 
 
 function HashRedirector() {
@@ -107,22 +108,23 @@ function useSyncUserMembership(user) {
   useEffect(() => {
     async function syncUserMembership() {
       if (!user) return;
-      // Check if user already exists in user_membership
       const { data: membership, error } = await supabase
         .from('user_membership')
-        .select('uid')
-        .eq('uid', user.id)
+        .select('id')
+        .eq('id', user.id)
         .single();
 
       if (!membership) {
-        // Insert new membership row with defaults
-        await supabase.from('user_membership').insert([{
+        const { error: insertError } = await supabase.from('user_membership').insert([{
           id: user.id,
           last_payment: null,
           valid_through: null,
           is_member: false,
           role: 'user'
         }]);
+        if (insertError) {
+          console.error('Membership insert error:', insertError);
+        }
       }
     }
     syncUserMembership();
@@ -131,6 +133,7 @@ function useSyncUserMembership(user) {
 
 function App() {
   const [user, setUser] = useState(null);
+  const [showAuth, setShowAuth] = useState(false); // <-- Add this
 
   // Listen for auth state changes globally
   useEffect(() => {
@@ -152,32 +155,36 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-      <Header />
+        <Header setShowAuth={setShowAuth} user={user} />
         <div className="main-content">
-        <Routes>        
-          <Route path="/" element={<><HashRedirector /><Home /></>} />
-          <Route path="/schedule" element={ <Schedule /> } />
-          <Route path="/contact" element={ <Contact /> } />
-          <Route path="/about" element={ <About /> } />
-          <Route path="/testdb" element={ <TestDb /> } />
-          <Route path="/currentboard" element={ <Currentboard /> } />
-          <Route path="/press" element={ <Press /> } />
-          <Route path="/hypnos" element={ <Hypnos /> } />
-          <Route path="/annualmeeting" element={ <AnnualMeeting /> } />
-          <Route path="/volunteering" element={ <Volunteering /> } />
-          <Route path="/freescreen" element={ <Freescreen/> } />
-          <Route path="/more" element={ <More /> } />
-          <Route path="/pastevents" element={ <PastEvents /> } />
-          <Route path="/currentpastprojects" element={ <CurrentPastProjects /> } />
-          <Route path="/memberinfo" element={ <MemberInfo /> } />  
-          <Route path="/test" element={<TestSupabase />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />  
-          <Route path="/account-settings" element={<AccountSettings />} />
-          <Route path="/edit-account-settings" element={<EditAccountSettings />} />
-          <Route path="/calendar" element={<Calendar />} /> {/* Add the Calendar route */}   
-        </Routes>
+          {showAuth ? (
+            <Auth />
+          ) : (
+            <Routes>
+              <Route path="/" element={<><HashRedirector /><Home setShowAuth={setShowAuth} /></>} />
+              <Route path="/schedule" element={ <Schedule /> } />
+              <Route path="/contact" element={ <Contact /> } />
+              <Route path="/about" element={ <About /> } />
+              <Route path="/testdb" element={ <TestDb /> } />
+              <Route path="/currentboard" element={ <Currentboard /> } />
+              <Route path="/press" element={ <Press /> } />
+              <Route path="/hypnos" element={ <Hypnos /> } />
+              <Route path="/annualmeeting" element={ <AnnualMeeting /> } />
+              <Route path="/volunteering" element={ <Volunteering /> } />
+              <Route path="/freescreen" element={ <Freescreen/> } />
+              <Route path="/more" element={ <More /> } />
+              <Route path="/past-events" element={ <PastEvents /> } />
+              <Route path="/currentpastprojects" element={ <CurrentPastProjects /> } />
+              <Route path="/memberinfo" element={ <MemberInfo /> } />  
+              <Route path="/test" element={<TestSupabase />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />  
+              <Route path="/account-settings" element={<AccountSettings />} />
+              <Route path="/edit-account-settings" element={<EditAccountSettings />} />
+              <Route path="/calendar" element={<Calendar />} /> {/* Add the Calendar route */}   
+            </Routes>
+          )}
         </div>
-      <Footer />
+        <Footer />
       </BrowserRouter>
     </div>
   );

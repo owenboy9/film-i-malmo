@@ -75,7 +75,7 @@ export default function Auth() {
       }
       return;
     }
-    navigate('/');
+    window.location.reload(); // Force a full page reload after login
   }
 
   const handleResetPassword = async () => {
