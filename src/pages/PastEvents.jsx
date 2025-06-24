@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-import React from 'react'
-
-export default function pastevents() {
-  return (
-    <div>Past Events</div>
-  )
-}
-=======
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabase';
 import CalendarTile from '../components/CalendarTile';
@@ -70,4 +61,3 @@ export default function PastEvents() {
     </div>
   );
 }
->>>>>>> feature-auth

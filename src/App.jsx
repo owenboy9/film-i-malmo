@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Contact from './pages/Contact';
@@ -20,22 +19,11 @@ import PastEvents from './pages/PastEvents';
 import CurrentPastProjects from './pages/CurrentPastProjects';
 import Header from './components/Header';
 import Footer from './components/Footer';
-=======
-import logo from './logo.svg';
-import React, { useEffect, useState } from 'react'
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
-import Home from './pages/home'
-import Contact from './pages/contact'
-import About from './pages/about';
-import TestDb from './pages/testdb';
-import TestSupabase from './TestSupabase'
-import ResetPasswordPage from './pages/ResetPasswordPage'
 import AccountSettings from './pages/AccountSettings'
 import EditAccountSettings from './pages/EditAccountSettings'
 import { supabase } from './supabase';
 import Calendar from './pages/Calendar';
-import PastEvents from './pages/PastEvents';
->>>>>>> feature-auth
+
 
 function HashRedirector() {
   const navigate = useNavigate();
@@ -51,36 +39,6 @@ function HashRedirector() {
   }, [navigate]);
   return null;
 }
-
-<<<<<<< HEAD
-function App() {
-  return (
-    <div className="App">
-      <BrowserRouter>
-      <Header />
-        <div className="main-content">
-        <Routes>        
-          <Route path="/" element={<><HashRedirector /><Home /></>} />
-          <Route path="/schedule" element={ <Schedule /> } />
-          <Route path="/contact" element={ <Contact /> } />
-          <Route path="/about" element={ <About /> } />
-          <Route path="/testdb" element={ <TestDb /> } />
-          <Route path="/currentboard" element={ <Currentboard /> } />
-          <Route path="/press" element={ <Press /> } />
-          <Route path="/hypnos" element={ <Hypnos /> } />
-          <Route path="/annualmeeting" element={ <AnnualMeeting /> } />
-          <Route path="/volunteering" element={ <Volunteering /> } />
-          <Route path="/freescreen" element={ <Freescreen/> } />
-          <Route path="/more" element={ <More /> } />
-          <Route path="/pastevents" element={ <PastEvents /> } />
-          <Route path="/currentpastprojects" element={ <CurrentPastProjects /> } />
-          <Route path="/memberinfo" element={ <MemberInfo /> } />  
-          <Route path="/test" element={<TestSupabase />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />     
-        </Routes>
-        </div>
-      <Footer />
-=======
 // --- Add this sync logic to App.js ---
 function useSyncUserProfile(user) {
   useEffect(() => {
@@ -194,19 +152,32 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Routes>
+      <Header />
+        <div className="main-content">
+        <Routes>        
           <Route path="/" element={<><HashRedirector /><Home /></>} />
+          <Route path="/schedule" element={ <Schedule /> } />
           <Route path="/contact" element={ <Contact /> } />
           <Route path="/about" element={ <About /> } />
           <Route path="/testdb" element={ <TestDb /> } />
+          <Route path="/currentboard" element={ <Currentboard /> } />
+          <Route path="/press" element={ <Press /> } />
+          <Route path="/hypnos" element={ <Hypnos /> } />
+          <Route path="/annualmeeting" element={ <AnnualMeeting /> } />
+          <Route path="/volunteering" element={ <Volunteering /> } />
+          <Route path="/freescreen" element={ <Freescreen/> } />
+          <Route path="/more" element={ <More /> } />
+          <Route path="/pastevents" element={ <PastEvents /> } />
+          <Route path="/currentpastprojects" element={ <CurrentPastProjects /> } />
+          <Route path="/memberinfo" element={ <MemberInfo /> } />  
           <Route path="/test" element={<TestSupabase />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />  
           <Route path="/account-settings" element={<AccountSettings />} />
           <Route path="/edit-account-settings" element={<EditAccountSettings />} />
-          <Route path="/calendar" element={<Calendar />} /> {/* Add the Calendar route */}
-          <Route path="/past-events" element={<PastEvents />} />
+          <Route path="/calendar" element={<Calendar />} /> {/* Add the Calendar route */}   
         </Routes>
->>>>>>> feature-auth
+        </div>
+      <Footer />
       </BrowserRouter>
     </div>
   );
