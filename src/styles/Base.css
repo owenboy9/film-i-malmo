@@ -30,13 +30,13 @@ code {
 }
 /* Light theme (default) */
 body.light {
-  background-color: #fff;
-  color: #333;
+  background-color: #e09090;
+  color: #ffffff;
 }
 
 /* Dark theme */
 body.dark {
   background-color: #121212;
-  color: #f0f0f0;
+  color: #f0f0f0cb;
 }
 
