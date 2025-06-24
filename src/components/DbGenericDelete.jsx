@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../supabase'
 
-export default function DbGenericDelete({ table, fields }) {
+export default function DbGenericDelete({ table, fields, optionLabels = [] }) {
   const [rows, setRows] = useState([])
   const [selectedId, setSelectedId] = useState('')
   const [loading, setLoading] = useState(false)
@@ -45,7 +45,9 @@ export default function DbGenericDelete({ table, fields }) {
           <option value="">Välj rad att ta bort...</option>
           {rows.map(row => (
             <option key={row.id} value={row.id}>
-              {fields.map(f => row[f.name]).join(' | ')}
+              {optionLabels.length > 0
+                ? optionLabels.map(label => row[label]).join(' | ')
+                : fields.map(f => row[f.name]).join(' | ')}
             </option>
           ))}
         </select>

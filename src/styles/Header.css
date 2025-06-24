@@ -1,0 +1,201 @@
+.header {
+  position: absolute;
+  top: 0;
+  height: 6rem;
+  width: 100%;
+  background: linear-gradient(90deg, #131414 0%,  #004aa0 50%);
+  padding: 0 1rem;
+  display: flex;
+  z-index: 1000;
+  align-items: center; /* Vertically center items */
+  justify-content: space-between; 
+}
+
+/*Logo styles */
+.logo {
+  height: 80px;
+  width: 80px;
+  color: #dbbf8b;
+  top : 0.5rem;
+  left: 6rem;
+  position: absolute;
+}
+.logo:hover {
+  color: white;
+  transform: scale(1.05); 
+}
+.header-icon {
+  font-size: 1.0rem;
+}
+.dark-light-icon {
+  top: 0.2rem;
+  position: relative;
+  font-size: 1.0rem;
+  color: #dbbf8b;
+  cursor: pointer;
+  transition: color 0.3s, transform 0.3s;
+  background: transparent;  
+  height: 1.0rem;
+  width: 1.0rem;
+}
+.dark-light-icon:hover,
+.header-icon:hover {
+  transform: scale(1.1);
+  color: #f1dca7;
+}
+
+/* Desktop nav */
+.nav-desktop {
+  position: absolute;
+  bottom: 0rem;
+  right: 15rem;
+  opacity: 0;
+  animation: fadeIn 0.8s ease-in-out forwards;
+}
+
+  /* Responsive styles for the header */
+.hamburger {
+  font-size: 28px;
+  color:  #dbbf8b;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none;
+  position: absolute;
+  right: 3rem;
+  z-index: 1000; /* Ensure the hamburger is above other elements */
+}
+.hamburger:hover {
+  color: white;
+  transform: scale(1.05); 
+}
+/* Header Hidden and Visible Styles */
+.header.visible {
+  transform: translateY(0);
+  animation: fadeInHeader 1s ease-in-out forwards;
+}
+@keyframes fadeInHeader {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.header.hidden {
+  transform: translateY(-100%);
+  animation: fadeOutHeader 1s ease-in-out forwards;
+}
+@keyframes fadeOutHeader {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 890px) {
+  .header {
+    height: 3rem;   
+  }
+  .logo {
+    top: 0.2rem;
+    height: 40px;
+    width: 40px;
+  } 
+}
+/* Nav styles */
+.nav-desktop ul {
+  display: flex;
+  color: white;
+  gap: 20px;
+  list-style: none;
+}
+
+
+.headerbtn {
+  color: white;
+  text-decoration: none;
+  font-size: 1.3em;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s;
+}
+.headerbtn:hover {
+  color:  #dbbf8b; 
+  text-decoration: underline;
+}
+.headerbtn.active {
+  color:  #dbbf8b;
+}
+.header h1{
+  text-align: start;
+  margin-left: 1rem;
+  font-size: 1.5rem;
+}
+
+/* Nav menu for mobile */
+.nav-menu {
+  display: none;
+}
+.nav-menu ul {
+  list-style: none;
+  padding: 20px;
+  background: white;
+  position: absolute;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  flex-direction: column;
+  border: solid 1px black;
+  box-shadow: #282c34 0px 4px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  top: 0rem;
+  right: 5rem;
+}
+.nav-menu.open {
+  display: flex;
+}
+.nav-menu ul li {
+  padding: 10px 20px;
+  transition: background-color 0.3s, color 0.3s;
+}
+.nav-menu ul li a {
+  text-decoration: none;
+  font-size: 1.3rem;
+  color: #333;
+}
+.nav-menu ul li a:hover {
+  color: #dbbf8b;
+  text-decoration: underline;
+}
+
+.burgerbtn.active {
+  color: #dbbf8b;
+}
+
+@media (max-width: 900px) {
+  .hamburger {
+    display: block;
+    animation: fadeIn 1s ease-in-out forwards;
+  }
+  .nav-desktop {
+    display: none;
+  }
+
+}
+/* keyframes for smooth fade */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+
+
+
+
+
