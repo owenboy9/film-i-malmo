@@ -23,6 +23,9 @@ import AccountSettings from './pages/AccountSettings'
 import EditAccountSettings from './pages/EditAccountSettings'
 import { supabase } from './supabase';
 import Calendar from './pages/Calendar';
+import BuyMembership from './pages/BuyMembership';
+import Payment from './pages/Payment';
+import MembershipConfirmation from './pages/MembershipConfirmation';
 
 
 function HashRedirector() {
@@ -174,7 +177,10 @@ function App() {
           <Route path="/reset-password" element={<ResetPasswordPage />} />  
           <Route path="/account-settings" element={<AccountSettings />} />
           <Route path="/edit-account-settings" element={<EditAccountSettings />} />
-          <Route path="/calendar" element={<Calendar />} /> {/* Add the Calendar route */}   
+          <Route path="/calendar" element={<Calendar />} /> {/* Add the Calendar route */}
+          <Route path="/buy-membership" element={<BuyMembership />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/membership-confirmation" element={<MembershipConfirmation />} />
         </Routes>
         </div>
       <Footer />

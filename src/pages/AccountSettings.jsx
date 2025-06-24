@@ -386,7 +386,7 @@ export default function AccountSettings() {
         <b>Valid through:</b> {membership?.valid_through || ''}<br />
       </div>
       <button onClick={() => navigate('/edit-account-settings')}>Edit</button>
-      <button onClick={() => navigate('/renew-membership')} style={{ marginLeft: 8 }}>Renew Membership</button>
+      <button onClick={() => navigate('/buy-membership')} style={{ marginLeft: 8 }}>Renew Membership</button>
       <button onClick={() => supabase.auth.signOut()} style={{ marginLeft: 8 }}>Logout</button>
       <button onClick={() => navigate('/')} style={{ marginLeft: 8 }}>Back to Home</button>
       {error && <p style={{ color: 'red' }}>{error}</p>}

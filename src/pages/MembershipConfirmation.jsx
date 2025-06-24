@@ -37,7 +37,7 @@ export default function MembershipConfirmation() {
   useEffect(() => {
     if (selectedPlan && validThrough) {
       const timer = setTimeout(() => {
-        navigate('/about')
+        navigate('/account-settings')
       }, 5000)
       return () => clearTimeout(timer)
     }
