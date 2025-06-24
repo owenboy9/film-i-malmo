@@ -2,6 +2,8 @@ import React from 'react'
 
 export default function press() {
   return (
-    <div>Press</div>
+    <div>
+      <h1>Press</h1>
+    </div>
   )
 }

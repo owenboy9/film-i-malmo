@@ -27,6 +27,7 @@ import BuyMembership from './pages/BuyMembership';
 import Payment from './pages/Payment';
 import MembershipConfirmation from './pages/MembershipConfirmation';
 
+import SinglePage from './pages/SinglePage';
 
 function HashRedirector() {
   const navigate = useNavigate();
@@ -164,6 +165,7 @@ function App() {
           <Route path="/about" element={ <About /> } />
           <Route path="/testdb" element={ <TestDb /> } />
           <Route path="/currentboard" element={ <Currentboard /> } />
+          <Route path="/singlepage" element={ <SinglePage /> } />
           <Route path="/press" element={ <Press /> } />
           <Route path="/hypnos" element={ <Hypnos /> } />
           <Route path="/annualmeeting" element={ <AnnualMeeting /> } />
