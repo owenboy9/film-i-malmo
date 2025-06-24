@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../supabase'
 
+const STORAGE_BUCKET = 'public-media' // byt till din bucket om du har en annan
+
 export default function DbGenericDelete({ table, fields, optionLabels = [] }) {
   const [rows, setRows] = useState([])
   const [selectedId, setSelectedId] = useState('')
@@ -19,9 +21,24 @@ export default function DbGenericDelete({ table, fields, optionLabels = [] }) {
     if (!error) setRows(data)
   }
 
+  // Hjälpfunktion för att ta bort bild från Storage
+  const removeImageFromStorage = async (imageUrl) => {
+    if (!imageUrl) return
+    // Extrahera path efter bucket-namnet
+    const urlParts = imageUrl.split(`${STORAGE_BUCKET}/`)
+    if (urlParts.length < 2) return
+    const filePath = urlParts[1].split('?')[0]
+    await supabase.storage.from(STORAGE_BUCKET).remove([filePath])
+  }
+
   const handleDelete = async (e) => {
     e.preventDefault()
     setLoading(true)
+    // Hämta raden som ska tas bort för att få ev. image_url
+    const row = rows.find(r => String(r.id) === String(selectedId))
+    if (row && row.image_url) {
+      await removeImageFromStorage(row.image_url)
+    }
     const { data, error } = await supabase
       .from(table)
       .delete()
