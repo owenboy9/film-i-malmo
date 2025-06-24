@@ -17,9 +17,9 @@ export default function Admin() {
     table: 'collaborators',
     fields: [
       { name: 'name', type: 'text' },
-      { name: 'partnership_type', type: 'partnership_type' },
+      { name: 'partnership_type', type: 'select', options: ['sponsor', 'collaborator'] },
       { name: 'logo_path', type: 'text' },
-      { name: 'logo_bucket', type: 'enum', options: ['public-media', 'private-media'] }
+      { name: 'logo_bucket', type: 'select', options: ['public-media', 'private-media'] }
 
     ],
     optionLabels: ['name']
@@ -31,7 +31,7 @@ export default function Admin() {
       { name: 'title', type: 'text' },
       { name: 'description', type: 'text' },
       { name: 'image_path', type: 'text' },
-        { name: 'image_bucket', type: 'enum', options: ['public-media', 'private-media'] },
+        { name: 'image_bucket', type: 'select', options: ['public-media', 'private-media'] },
         { name: 'starts_at', type: 'timestamp' },
         { name: 'genre', type: 'text' },
         { name: 'short_description', type: 'text' },
@@ -53,22 +53,22 @@ export default function Admin() {
   const page_contentCrudProps = {
     table: 'page_content',
     fields: [
-      { name: 'page', type: 'enum', options: ['press', 'freescreen', 'annual-meeting', 'banner', 'current_board', 'cafe', 'projects', 'about', 'home', 'more'] },
-      { name: 'large_title', type: 'text' },
-      { name: 'small_title_1', type: 'text' },
-      { name: 'description_1', type: 'text' },
-      { name: 'link_name_1', type: 'text' },
-      { name: 'link_1', type: 'text' },
-      {name: 'small_title_2', type: 'text' },
-      { name: 'description_2', type: 'text' },
-      { name: 'link_name_2', type: 'text' },
-      { name: 'link_2', type: 'text' },
-      { name: 'small_title_3', type: 'text' },
-      { name: 'description_3', type: 'text' },
-      { name: 'link_name_3', type: 'text' },
-      { name: 'link_3', type: 'text' },
-      { name: 'img_path', type: 'text' },
-      { name: 'img', type: 'enum', options: ['public-media', 'private-media'] }
+      { name: 'page', type: 'select', options: ['press', 'freescreen', 'annual-meeting', 'banner', 'current_board', 'cafe', 'projects', 'about', 'home', 'more'], required: true },
+      { name: 'large_title', type: 'text', required: false },
+      { name: 'small_title_1', type: 'text', required: false },
+      { name: 'description_1', type: 'text', required: false },
+      { name: 'link_name_1', type: 'text', required: false },
+      { name: 'link_1', type: 'text', required: false },
+      { name: 'small_title_2', type: 'text', required: false },
+      { name: 'description_2', type: 'text', required: false },
+      { name: 'link_name_2', type: 'text', required: false },
+      { name: 'link_2', type: 'text', required: false },
+      { name: 'small_title_3', type: 'text', required: false },
+      { name: 'description_3', type: 'text', required: false },
+      { name: 'link_name_3', type: 'text', required: false },
+      { name: 'link_3', type: 'text', required: false },
+      { name: 'img_path', type: 'text', required: false },
+      { name: 'img', type: 'select', options: ['public-media', 'private-media'], required: false }
     ],
     optionLabels: ['page']
   }
