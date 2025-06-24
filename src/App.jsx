@@ -28,6 +28,7 @@ import Payment from './pages/Payment';
 import MembershipConfirmation from './pages/MembershipConfirmation';
 
 import SinglePage from './pages/SinglePage';
+import Admin from './pages/Admin';
 
 function HashRedirector() {
   const navigate = useNavigate();
@@ -183,6 +184,7 @@ function App() {
           <Route path="/buy-membership" element={<BuyMembership />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/membership-confirmation" element={<MembershipConfirmation />} />
+          <Route path='/admin' element={<Admin />} />
         </Routes>
         </div>
       <Footer />
