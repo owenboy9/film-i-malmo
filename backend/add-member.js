@@ -1,3 +1,9 @@
+// Öppna terminal och gö fölljande:
+
+// PS C:\Users\David\film-i-malmo> cd backend
+// PS C:\Users\David\film-i-malmo\backend> node add-member.js
+
+
 const express = require('express');
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');

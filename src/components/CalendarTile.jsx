@@ -27,7 +27,16 @@ export default function CalendarTile({ event }) {
     <div className="calendar-tile">
       <div><b>{weekday}, {dateStr}</b></div>
       <div>{timeStr}</div>
-      <img src={imageUrl} alt={event.title} style={{ width: '100%' }} />
+      <img
+        src={imageUrl}
+        alt={event.title}
+        style={{
+          width: '100%',
+          height: '220px',      // or any height you want
+          objectFit: 'cover',   // crop to fill the box
+          borderRadius: '8px'   // optional: rounded corners
+        }}
+      />
       <div><b>{event.title}</b></div>
       <div>{event.genre}</div>
       <div>{event.director}</div>

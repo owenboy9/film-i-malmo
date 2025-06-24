@@ -15,7 +15,6 @@ export default function Auth() {
   const [addressStreet, setAddressStreet] = useState('');
   const [addressStNum, setAddressStNum] = useState('');
   const [addressCity, setAddressCity] = useState('');
-  const [payment, setPayment] = useState('Credit Card')
   const [newsletter, setNewsletter] = useState(false)
   const [error, setError] = useState(null)
   const [signupMessage, setSignupMessage] = useState('')
@@ -61,7 +60,6 @@ export default function Auth() {
     setBirthDate('')
     setPhone('')
     setAddress('')
-    setPayment('Credit Card')
     setNewsletter(false)
   }
 
@@ -206,16 +204,6 @@ export default function Auth() {
             value={addressCity}
             onChange={e => setAddressCity(e.target.value)}
           /><br/>
-          <label>
-            Payment info:&nbsp;
-            <select value={payment} onChange={e => setPayment(e.target.value)}>
-              <option value="Credit Card">Credit Card</option>
-              <option value="Swish">Swish</option>
-              <option value="Paypal">Paypal</option>
-              <option value="Apple Pay">Apple Pay</option>
-            </select>
-          </label>
-          <br/>
         </>
       )}
       <input
