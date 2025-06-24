@@ -1,7 +1,11 @@
 body {
   padding-top: 6rem;
-  background-color: lightgrey;
-  background: linear-gradient(90deg, lightgrey 0%,  lightblue 50%);
+  background: linear-gradient(
+            to right,
+            rgba(26, 1, 1, 0.7) 0%,
+            rgba(25, 2, 117, 0.432) 20%,
+            rgba(97, 12, 12, 0.5) 80%,
+            rgba(32, 2, 2, 0.7) 100%);
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
