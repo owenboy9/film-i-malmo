@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../supabase'
 
-const STORAGE_BUCKET = 'public-media' // byt till din bucket om du har en annan
+const STORAGE_BUCKET = 'public-media'
 
 export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
   const [rows, setRows] = useState([])
@@ -9,6 +9,7 @@ export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
   const [values, setValues] = useState({})
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
+  const [search, setSearch] = useState('')
   const [uploading, setUploading] = useState(false)
   const [removing, setRemoving] = useState(false)
 
@@ -117,17 +118,38 @@ export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
     fetchRows()
   }
 
+  // --- Sökfunktion ---
+  const filteredRows = rows.filter(row =>
+    optionLabels.length > 0
+      ? optionLabels.some(label =>
+          String(row[label] ?? '')
+            .toLowerCase()
+            .includes(search.toLowerCase())
+        )
+      : fields.some(f =>
+          String(row[f.name] ?? '')
+            .toLowerCase()
+            .includes(search.toLowerCase())
+        )
+  )
+
   return (
     <div>
       <h3>Uppdatera i {table}</h3>
       <form onSubmit={handleUpdate}>
+        <input
+          type="text"
+          placeholder="Sök..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
         <select
           value={selectedId}
           onChange={e => setSelectedId(e.target.value)}
           required
         >
           <option value="">Välj rad...</option>
-          {rows.map(row => (
+          {filteredRows.map(row => (
             <option key={row.id} value={row.id}>
               {optionLabels.length > 0
                 ? optionLabels.map(label => row[label]).join(' | ')

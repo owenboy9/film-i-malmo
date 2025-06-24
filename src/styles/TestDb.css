@@ -1,0 +1,8 @@
+.db-generic-read {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.db-generic-read li {
+  list-style: none;
+}
