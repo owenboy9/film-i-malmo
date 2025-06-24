@@ -8,6 +8,7 @@ export default function DbGenericDelete({ table, fields, optionLabels = [] }) {
   const [selectedId, setSelectedId] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     fetchRows()
@@ -20,6 +21,20 @@ export default function DbGenericDelete({ table, fields, optionLabels = [] }) {
       .order('id', { ascending: false })
     if (!error) setRows(data)
   }
+
+  const filteredRows = rows.filter(row =>
+  optionLabels.length > 0
+    ? optionLabels.some(label =>
+        String(row[label] ?? '')
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      )
+    : fields.some(f =>
+        String(row[f.name] ?? '')
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      )
+);
 
   // Hjälpfunktion för att ta bort bild från Storage
   const removeImageFromStorage = async (imageUrl) => {
@@ -54,13 +69,19 @@ export default function DbGenericDelete({ table, fields, optionLabels = [] }) {
     <div>
       <h3>Ta bort i {table}</h3>
       <form onSubmit={handleDelete}>
+        <input
+          type="text"
+          placeholder="Sök..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
         <select
           value={selectedId}
           onChange={e => setSelectedId(e.target.value)}
           required
         >
           <option value="">Välj rad att ta bort...</option>
-          {rows.map(row => (
+          {filteredRows.map(row => (
             <option key={row.id} value={row.id}>
               {optionLabels.length > 0
                 ? optionLabels.map(label => row[label]).join(' | ')
