@@ -17,7 +17,13 @@ export default function PastEvents() {
       .lt('starts_at', new Date().toISOString())
       .order('starts_at', { ascending: false })
       .range(from, from + 19);
-    setEvents(prev => [...prev, ...(data || [])]);
+
+    setEvents(prev => {
+      // Filter out events with duplicate IDs
+      const existingIds = new Set(prev.map(ev => ev.id));
+      const newEvents = (data || []).filter(ev => !existingIds.has(ev.id));
+      return [...prev, ...newEvents];
+    });
     setFrom(prev => prev + 20);
     setHasMore(data && data.length === 20);
     setLoading(false);

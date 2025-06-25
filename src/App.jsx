@@ -26,6 +26,8 @@ import Calendar from './pages/Calendar';
 import BuyMembership from './pages/BuyMembership';
 import Payment from './pages/Payment';
 import MembershipConfirmation from './pages/MembershipConfirmation';
+import Auth from './components/Auth'; // Make sure this is imported
+import UploadPrivateMedia from './pages/UploadPrivateMedia'; // <-- add this at the top
 
 import SinglePage from './pages/SinglePage';
 import Admin from './pages/Admin';
@@ -112,22 +114,23 @@ function useSyncUserMembership(user) {
   useEffect(() => {
     async function syncUserMembership() {
       if (!user) return;
-      // Check if user already exists in user_membership
       const { data: membership, error } = await supabase
         .from('user_membership')
-        .select('uid')
-        .eq('uid', user.id)
+        .select('id')
+        .eq('id', user.id)
         .single();
 
       if (!membership) {
-        // Insert new membership row with defaults
-        await supabase.from('user_membership').insert([{
+        const { error: insertError } = await supabase.from('user_membership').insert([{
           id: user.id,
           last_payment: null,
           valid_through: null,
           is_member: false,
           role: 'user'
         }]);
+        if (insertError) {
+          console.error('Membership insert error:', insertError);
+        }
       }
     }
     syncUserMembership();
@@ -136,6 +139,7 @@ function useSyncUserMembership(user) {
 
 function App() {
   const [user, setUser] = useState(null);
+  const [showAuth, setShowAuth] = useState(false); // <-- Add this
 
   // Listen for auth state changes globally
   useEffect(() => {
@@ -157,8 +161,11 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-      <Header />
+        <Header setShowAuth={setShowAuth} user={user} />
         <div className="main-content">
+          {showAuth ? (
+            <Auth />
+          ) : (
         <Routes>        
           <Route path="/" element={<><HashRedirector /><Home /></>} />
           <Route path="/schedule" element={ <Schedule /> } />
@@ -185,9 +192,11 @@ function App() {
           <Route path="/payment" element={<Payment />} />
           <Route path="/membership-confirmation" element={<MembershipConfirmation />} />
           <Route path='/admin' element={<Admin />} />
+          <Route path="/upload-private-media" element={<UploadPrivateMedia />} /> {/* <-- add this */}
         </Routes>
+      )}
         </div>
-      <Footer />
+        <Footer />
       </BrowserRouter>
     </div>
   );
