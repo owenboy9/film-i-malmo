@@ -2,6 +2,7 @@ import DbGenericInsert from '../components/DbGenericInsert'
 import DbGenericRead from '../components/DbGenericRead'
 import DbGenericUpdate from '../components/DbGenericUpdate'
 import DbGenericDelete from '../components/DbGenericDelete'
+import '../styles/TestDb.css'
 
 export default function TestDb() {
   const movieCrudProps = {
@@ -10,7 +11,17 @@ export default function TestDb() {
       { name: 'title', type: 'text' },
       { name: 'description', type: 'text' },
       { name: 'image_url', type: 'text' }
-    ]
+    ],
+    filter: q => q.gte('created_at', new Date().toISOString().slice(0, 10))
+  };
+  const movieCrudProps2 = {
+    table: 'movies',
+    fields: [
+      { name: 'title', type: 'text' },
+      { name: 'description', type: 'text' },
+      { name: 'image_url', type: 'text' }
+    ],
+    filter: q => q.lte('created_at', new Date(Date.now() - 86400000).toISOString().slice(0, 10))
   };
   const aboutCrudProps = {
     table: 'about',
@@ -29,6 +40,8 @@ export default function TestDb() {
       
       <h2>Testa generisk read</h2>
       <DbGenericRead {...movieCrudProps} />
+      <h2>Testa generisk read med filter</h2>
+      <DbGenericRead {...movieCrudProps2} />
       <h2>Testa generisk insert</h2>
       <DbGenericInsert {...movieCrudProps} />
       <h2>Testa generisk update</h2>
