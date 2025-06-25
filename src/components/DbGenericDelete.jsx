@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../supabase'
 
-const STORAGE_BUCKET = 'public-media' // byt till din bucket om du har en annan
+const STORAGE_BUCKET = 'public-media' // Change this to your bucket name if different
 
 export default function DbGenericDelete({ table, fields, optionLabels = [] }) {
   const [rows, setRows] = useState([])
   const [selectedId, setSelectedId] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState('')
 
+  // Fetch rows from the table whenever table or fields change
   useEffect(() => {
     fetchRows()
   }, [table, fields])
 
+  // Load rows from Supabase
   const fetchRows = async () => {
     const { data, error } = await supabase
       .from(table)
@@ -22,43 +24,47 @@ export default function DbGenericDelete({ table, fields, optionLabels = [] }) {
     if (!error) setRows(data)
   }
 
+  // Filter rows for the search box, using optionLabels or fields
   const filteredRows = rows.filter(row =>
-  optionLabels.length > 0
-    ? optionLabels.some(label =>
-        String(row[label] ?? '')
-          .toLowerCase()
-          .includes(search.toLowerCase())
-      )
-    : fields.some(f =>
-        String(row[f.name] ?? '')
-          .toLowerCase()
-          .includes(search.toLowerCase())
-      )
-);
+    optionLabels.length > 0
+      ? optionLabels.some(label =>
+          String(row[label] ?? '').toLowerCase().includes(search.toLowerCase())
+        )
+      : fields.some(f =>
+          String(row[f.name] ?? '').toLowerCase().includes(search.toLowerCase())
+        )
+  )
 
-  // Hjälpfunktion för att ta bort bild från Storage
+  // Remove image from Supabase storage bucket if present
   const removeImageFromStorage = async (imageUrl) => {
     if (!imageUrl) return
-    // Extrahera path efter bucket-namnet
+    // Extract path after bucket name
     const urlParts = imageUrl.split(`${STORAGE_BUCKET}/`)
     if (urlParts.length < 2) return
     const filePath = urlParts[1].split('?')[0]
     await supabase.storage.from(STORAGE_BUCKET).remove([filePath])
   }
 
+  // Handle delete action for selected row
   const handleDelete = async (e) => {
     e.preventDefault()
     setLoading(true)
-    // Hämta raden som ska tas bort för att få ev. image_url
+    
+    // Find the row to delete
     const row = rows.find(r => String(r.id) === String(selectedId))
+    
+    // If row contains an image_url field, remove the image from storage
     if (row && row.image_url) {
       await removeImageFromStorage(row.image_url)
     }
+    
+    // Delete the row from the table
     const { data, error } = await supabase
       .from(table)
       .delete()
       .eq('id', selectedId)
       .select()
+    
     setResult({ data, error })
     setLoading(false)
     setSelectedId('')
