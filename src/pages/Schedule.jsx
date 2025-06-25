@@ -12,7 +12,7 @@ export default function Schedule() {
         table={table}
         fields={fields.filter(f => f.name === 'title' || f.name === 'starts_at')}
         filter={(query) => query.gt('starts_at', new Date().toISOString())}
-        hideHeaders={true} // Hide headers for a cleaner look
+        hideHeaders={false} // Hide headers for a cleaner look
       />
 
     </div>

@@ -12,7 +12,7 @@ export const crudConfigs = {
     fields: [
       { name: 'name', type: 'text' },
       { name: 'partnership_type', type: 'select', options: ['sponsor', 'collaborator'] },
-      { name: 'logo_path', type: 'file', bucket: 'public-media', bucketField: 'logo_bucket', required: false }
+      { name: 'image_path', type: 'file', bucket: 'public-media', bucketField: 'image_bucket', required: false }
     ],
     optionLabels: ['name']
   },
@@ -53,7 +53,7 @@ export const crudConfigs = {
       { name: 'description_3', type: 'text', required: false },
       { name: 'link_name_3', type: 'text', required: false },
       { name: 'link_3', type: 'text', required: false },
-      { name: 'img_path', type: 'file', bucket: 'public-media', bucketField: 'img_bucket',required: false }
+      { name: 'image_path', type: 'file', bucket: 'public-media', bucketField: 'image_bucket',required: false }
     ],
     optionLabels: ['page']
   },
@@ -82,7 +82,8 @@ export const crudConfigs = {
           { label: 'no', value: false }
         ]
       },
-      { name: 'photo_path', type: 'file', bucket: 'public-media', bucketField: 'photo_bucket', required: false }
+      { name: 'image_path', type: 'file', bucket: 'public-media', bucketField: 'image_bucket', required: false },
+      // { name: 'image_bucket', type: 'text' }
     ],
     optionLabels: ['name']
   }

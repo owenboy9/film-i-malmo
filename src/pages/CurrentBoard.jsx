@@ -1,33 +1,59 @@
 import React from 'react'
+import DbGenericRead from '../components/DbGenericRead'
+import { crudConfigs } from '../components/GenericCrudProps'
 
-export default function currentboard() {
+export default function CurrentBoard() {
+  const currentYear = new Date().getFullYear()
+  const { table, fields } = crudConfigs.rope_runners
+  const displayFields = fields.filter(
+    f =>
+      f.name === 'name' ||
+      f.name === 'role' ||
+      f.name === 'pronouns' ||
+      f.name === 'bio' ||
+      f.name === 'image_path' ||
+      f.name === 'image_bucket'
+  )
+
   return (
     <div>
-      <h1>Current Board</h1>
+      <h1>The People Behind Film i Malmö</h1>
 
-      <p>
-        The current board of Film i Malmö consists of the following members:</p>
+      <h2>Board Members {currentYear}</h2>
+      <DbGenericRead
+        table={table}
+        fields={displayFields}
+        filter={query => query.eq('board_member', true)}
+        hideHeaders={true}
+        renderRow={row => {
+  console.log(row); // <-- Add this line
+  return (
+    <div>
+      <div>
+        {row.image_path && row.image_bucket && (
+          <img
+            src={`https://llslxcymbxcvwrufjaqm.supabase.co/storage/v1/object/public/${row.image_bucket}/${row.image_path}`}
+            alt={row.name}
+            style={{ width: 240, height: 240, objectFit: 'cover', borderRadius: '8px' }}
+          />
+        )}
+      </div>
+      <h2>{row.name}</h2>
+      <h3>{row.role}</h3>
+      <p>{row.pronouns}</p>
+      <p>{row.bio}</p>
+    </div>
+  )
+}}
+      />
 
-        
-        <img src="https://filmimalmo.se/wp-content/uploads/2024/08/454525490_516043230889102_1059374835688045188_n.jpg" alt="anna" />
-        < br />
-
-
-        <img src="https://filmimalmo.se/wp-content/uploads/2025/06/97225421-0b99-4595-8401-5f8725bf45ea-840x1024.jpeg" alt="amalia" />< br />
-
-
-        <img src="https://filmimalmo.se/wp-content/uploads/2024/08/453080059_518856297173286_6907060641851160063_n-768x1024.jpg" alt="volha" />< br/>
-
-        <hr/>
-
-        <h2>GOOD-TO-KNOW NOT-BOARD-MEMBERS</h2>
-
-
-        <img src="https://filmimalmo.se/wp-content/uploads/2023/12/paul-the-poet-768x1024.png" alt="paul" />< br />
-
-
-        <img src="https://filmimalmo.se/wp-content/uploads/2022/05/IMG_20220530_201926-707x1536.jpg" alt="owen" />
-
+      <h2>Good to know others</h2>
+      <DbGenericRead
+        table={table}
+        fields={displayFields}
+        filter={query => query.eq('board_member', false)}
+        hideHeaders={true}
+      />
     </div>
   )
 }
