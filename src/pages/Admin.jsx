@@ -19,7 +19,6 @@ export default function Admin() {
     fields: [
       { name: 'name', type: 'text' },
       { name: 'partnership_type', type: 'select', options: ['sponsor', 'collaborator'] },
-      { name: 'logo_path', type: 'text' },
       { name: 'img', type: 'file', bucket: 'public-media', required: false }
 
     ],
@@ -31,7 +30,6 @@ export default function Admin() {
     fields: [
       { name: 'title', type: 'text' },
       { name: 'description', type: 'text' },
-      { name: 'image_path', type: 'text' },
         { name: 'img', type: 'file', bucket: 'public-media', required: false },
         { name: 'starts_at', type: 'timestamp' },
         { name: 'genre', type: 'text' },
@@ -68,7 +66,6 @@ export default function Admin() {
       { name: 'description_3', type: 'text', required: false },
       { name: 'link_name_3', type: 'text', required: false },
       { name: 'link_3', type: 'text', required: false },
-      { name: 'img_path', type: 'text', required: false },
       { name: 'img', type: 'file', bucket: 'public-media', required: false }
     ],
     optionLabels: ['page']

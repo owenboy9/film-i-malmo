@@ -143,7 +143,7 @@ export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
 
   return (
     <div>
-      <h3>Uppdatera i {table}</h3>
+      <h3>update {table}</h3>
       <form onSubmit={handleUpdate}>
         <input
           type="text"
@@ -156,7 +156,7 @@ export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
           onChange={e => setSelectedId(e.target.value)}
           required
         >
-          <option value="">Välj rad...</option>
+          <option value="">choose row...</option>
           {filteredRows.map(row => (
             <option key={row.id} value={row.id}>
               {optionLabels.length > 0
@@ -224,7 +224,7 @@ export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
                   disabled={!selectedId}
                   required={field.required ?? false}
                 >
-                  <option value="">Välj...</option>
+                  <option value="">choose...</option>
                   {field.options && field.options.map(opt => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}

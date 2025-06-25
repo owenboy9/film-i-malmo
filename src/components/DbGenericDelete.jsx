@@ -67,11 +67,11 @@ export default function DbGenericDelete({ table, fields, optionLabels = [] }) {
 
   return (
     <div>
-      <h3>Ta bort i {table}</h3>
+      <h3>delete from {table}</h3>
       <form onSubmit={handleDelete}>
         <input
           type="text"
-          placeholder="Sök..."
+          placeholder="Search..."
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
@@ -80,7 +80,7 @@ export default function DbGenericDelete({ table, fields, optionLabels = [] }) {
           onChange={e => setSelectedId(e.target.value)}
           required
         >
-          <option value="">Välj rad att ta bort...</option>
+          <option value="">choose row to delete...</option>
           {filteredRows.map(row => (
             <option key={row.id} value={row.id}>
               {optionLabels.length > 0

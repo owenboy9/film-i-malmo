@@ -25,9 +25,9 @@ export default function DbGenericRead({ table, fields, filter }) {
 
   return (
     <div>
-      <h3>Lista: {table}</h3>
+      <h3>content of {table}</h3>
       {loading ? (
-        <p>Laddar...</p>
+        <p>Loading...</p>
       ) : (
         <ul className='db-generic-read'>
           {rows.map(row => (

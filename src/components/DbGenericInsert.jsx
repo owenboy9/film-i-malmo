@@ -69,7 +69,7 @@ export default function DbGenericInsert({ table, fields }) {
 
   return (
     <div>
-      <h3>Lägg till i {table}</h3>
+      <h3>add content to {table}</h3>
       <form onSubmit={handleInsert}>
         {fields.map(field => (
           <div key={field.name}>
