@@ -29,22 +29,20 @@ export default function Admin() {
     table: 'events',
     fields: [
       { name: 'title', type: 'text' },
-      { name: 'description', type: 'text' },
         { name: 'img', type: 'file', bucket: 'public-media', required: false },
         { name: 'starts_at', type: 'timestamp' },
         { name: 'genre', type: 'text' },
         { name: 'short_description', type: 'text' },
         { name: 'long_description', type: 'text' },
         { name: 'director', type: 'text' },
-        { name: 'genre', type: 'text' },
+        { name: 'genre', type: 'text', required: false },
         { name: 'country', type: 'text' },
-        { name: 'year', type: 'text' },
         { name: 'year', type: 'integer' },
         { name: 'length', type: 'integer' },
         { name: 'language', type: 'text' },
-        { name: 'subtitles', type: 'text' },
-        { name: 'age_restriction', type: 'integer' },
-        { name: 'content_warning', type: 'text' }
+        { name: 'subtitles', type: 'text', required: false },
+        { name: 'age_restriction', type: 'integer', required: false },
+        { name: 'content_warning', type: 'text', required: false }
     ],
     optionLabels: ['event']
   };
@@ -69,6 +67,31 @@ export default function Admin() {
       { name: 'img', type: 'file', bucket: 'public-media', required: false }
     ],
     optionLabels: ['page']
+  }
+
+  const projectsCrudProps = {
+    table: 'projects',
+    fields: [
+      { name: 'title', type: 'text' },
+      { name: 'description', type: 'text' },
+      { name: 'starts', type: 'date' },
+      { name: 'ends', type: 'date' },
+    ],
+    optionLabels: ['title']
+  }
+
+  const rope_runnersCrudProps = {
+    table: 'rope_runners',
+    fields: [
+      { name: 'name', type: 'text' },
+      { name: 'role', type: 'text' },
+      { name: 'pronouns', type: 'text' },
+      { name: 'bio', type: 'text' },
+      { name: 'board_member', type: 'select', options: [{ label: 'yes', value: true },
+    { label: 'no', value: false }] },
+      { name: 'img', type: 'file', bucket: 'public-media', required: false }
+    ],
+    optionLabels: ['name']
   }
 
   return (
