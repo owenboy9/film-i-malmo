@@ -40,3 +40,11 @@ body.dark {
   color: #f0f0f0cb;
 }
 
+.popup {
+  background-color: chartreuse;
+  padding: 24; 
+  border-Radius: 8; 
+  min-Width: 320; 
+  max-Width: 400;
+}
+

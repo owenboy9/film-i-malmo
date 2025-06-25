@@ -238,11 +238,11 @@ useEffect(() => {
         </ul>
       </nav>
       {showLogoutPopup && (
-        <div className="logout-popup" style={{
+        <div style={{
           position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
           background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
         }}>
-          <div style={{ background: '#fff', padding: 24, borderRadius: 8, minWidth: 250, textAlign: 'center' }}>
+          <div className="popup popup-logout">
             <p>Do you want to log out?</p>
             <button onClick={handleLogout} style={{ marginRight: 12 }}>Yes</button>
             <button onClick={() => setShowLogoutPopup(false)}>Cancel</button>

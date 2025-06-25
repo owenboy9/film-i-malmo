@@ -796,7 +796,7 @@ useEffect(() => {
           position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
           background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
         }}>
-          <div style={{ background: '#fff', padding: 24, borderRadius: 8, minWidth: 320, maxWidth: 400 }}>
+          <div className= "popup popup-membership">
             <h3>User Membership Info</h3>
             <b>UID:</b> {membershipPopup.id}<br />
             <b>Role:</b> {membershipPopup.role}<br />

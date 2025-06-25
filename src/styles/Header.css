@@ -178,6 +178,14 @@
   text-decoration: underline;
 }
 
+.popup.popup-logout{
+  background-color: white;
+  padding: 24; 
+  border-Radius: 8; 
+  min-Width: 320; 
+  max-Width: 400;
+}
+
 .burgerbtn.active {
   color: #dbbf8b;
 }
