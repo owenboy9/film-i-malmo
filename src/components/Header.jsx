@@ -122,6 +122,11 @@ useEffect(() => {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/admin" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
+            Admin
+            </NavLink>
+          </li>
+          <li>
           <span onClick={toggleTheme}>
             <FontAwesomeIcon
               icon={isDarkMode ? faMoon : faSun}
