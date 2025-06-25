@@ -98,7 +98,7 @@ export default function DbGenericInsert({ table, fields }) {
     const path = values[fieldName]
     const bucket = values[`${fieldName.replace('_path', '_bucket')}`]
     if (bucket && path) {
-      return `https://YOUR_PROJECT_ID.supabase.co/storage/v1/object/public/${bucket}/${path}`
+      return `https://llslxcymbxcvwrufjaqm.supabase.co/storage/v1/object/public/${bucket}/${path}`
     }
     return null
   }

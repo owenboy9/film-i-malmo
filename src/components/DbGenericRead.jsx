@@ -6,8 +6,7 @@ export default function DbGenericRead({ table, fields = [], filter, hideHeaders 
   const [loading, setLoading] = useState(true)
   const [errorMsg, setErrorMsg] = useState(null)
 
-  // Replace with your own Supabase project ref
-  const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co'
+  const SUPABASE_URL = 'https://llslxcymbxcvwrufjaqm.supabase.co'
 
   useEffect(() => {
     const fetchRows = async () => {
