@@ -108,8 +108,8 @@ useEffect(() => {
           </li>
           
           <li>
-            <NavLink to="/Schedule" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
-            Schedule
+            <NavLink to="/calendar" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
+            Calendar
             </NavLink>
           </li>
           <li>
@@ -161,7 +161,7 @@ useEffect(() => {
               onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
               className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
             >
-              Schedule
+              Calendar
             </NavLink>
           </li>
           <li>
