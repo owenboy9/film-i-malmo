@@ -1,3 +1,4 @@
+// DbGenericInsert.js
 import React, { useState } from 'react'
 import { supabase } from '../supabase'
 
@@ -12,11 +13,19 @@ export default function DbGenericInsert({ table, fields }) {
 
   const handleChange = (e, type) => {
     const { name, value, checked } = e.target
+    let newValue = value
+
+    if (type === 'checkbox') {
+      newValue = checked
+    } else if (type === 'number') {
+      newValue = Number(value)
+    } else if (type === 'select' && (value === 'true' || value === 'false')) {
+      newValue = value === 'true'
+    }
+
     setValues({
       ...values,
-      [name]: type === 'checkbox' ? checked
-        : type === 'number' ? Number(value)
-        : value
+      [name]: newValue
     })
   }
 
@@ -83,9 +92,15 @@ export default function DbGenericInsert({ table, fields }) {
                   required={field.required ?? false}
                 >
                   <option value="">Välj...</option>
-                  {field.options.map(opt => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
+                  {field.options.map(opt =>
+                    typeof opt === 'object' ? (
+                      <option key={opt.value} value={String(opt.value)}>
+                        {opt.label}
+                      </option>
+                    ) : (
+                      <option key={opt} value={opt}>{opt}</option>
+                    )
+                  )}
                 </select>
               ) : field.type === 'file' ? (
                 <>

@@ -224,10 +224,14 @@ export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
                   disabled={!selectedId}
                   required={field.required ?? false}
                 >
-                  <option value="">choose...</option>
-                  {field.options && field.options.map(opt => (
+                <option value="">choose...</option>
+                {field.options && field.options.map(opt =>
+                  typeof opt === 'object' ? (
+                    <option key={opt.value} value={String(opt.value)}>{opt.label}</option>
+                  ) : (
                     <option key={opt} value={opt}>{opt}</option>
-                  ))}
+                  )
+                )}
                 </select>
               ) : field.type === 'checkbox' ? (
                 <input
