@@ -52,10 +52,17 @@
 /* Desktop nav */
 .nav-desktop {
   position: absolute;
-  bottom: 0rem;
+  top: 0rem;
   right: 15rem;
   opacity: 0;
   animation: fadeIn 0.8s ease-in-out forwards;
+}
+/* Nav styles */
+.nav-desktop ul {
+  display: flex;
+  color: white;
+  gap: 20px;
+  list-style: none;
 }
 
   /* Responsive styles for the header */
@@ -114,13 +121,7 @@
     width: 40px;
   } 
 }
-/* Nav styles */
-.nav-desktop ul {
-  display: flex;
-  color: white;
-  gap: 20px;
-  list-style: none;
-}
+
 
 
 .headerbtn {

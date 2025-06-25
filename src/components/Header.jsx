@@ -86,27 +86,17 @@ useEffect(() => {
   return (
     <header className={`header ${isHeaderVisible ? 'visible' : 'hidden'}`}>
         
-        
+      <NavLink to="/" onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}>
+        <FilmiMalmoLogo className="logo" />     
+      </NavLink>
 
-        <NavLink to="/" onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}>
-          <FilmiMalmoLogo className="logo" />     
-        </NavLink>
-
-
-
-      <button className="hamburger" onClick={toggleMenu} aria-expanded={isMenuOpen}
+      <span className="hamburger" onClick={toggleMenu} aria-expanded={isMenuOpen}
         aria-label="Toggle navigation menu">
         ☰
-      </button>
+      </span>
 
       <nav className={`nav-menu ${isMenuOpen ? 'open' : ''}`}>
         <ul>
-          <li>
-            <NavLink to="/" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
-            <FontAwesomeIcon icon={faUser} className="header-icon" />
-            </NavLink>
-          </li>
-          
           <li>
             <NavLink to="/calendar" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
             Calendar
@@ -146,10 +136,15 @@ useEffect(() => {
           </span>
           </li>
           <li>
+            <NavLink to="/" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
+            <FontAwesomeIcon icon={faUser} className="header-icon" />
+            </NavLink>
+            <span> </span>
             <NavLink to="/account-settings" onClick={() => { toggleMenu(); setShowAuth(false); window.scrollTo(0, 0); }} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
               My Membership
             </NavLink>
-          </li>
+
+          </li> 
         </ul>
       </nav>
 
@@ -212,17 +207,19 @@ useEffect(() => {
               className="dark-light-icon"
             />
           </span>
+          </li>
+        </ul>
+        <ul>
+          <li>
             <NavLink
               to="/account-settings"
               onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
               className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
             >
-              My Membership
+              {user ? 'My Membership' : 'Login'}
             </NavLink>
-          </li>
-          <li>
-            <button
-              className="headerbtn"
+          <span> </span>
+            <span className="headerbtn"
               style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
               onClick={() => {
                 if (user) {
@@ -233,10 +230,11 @@ useEffect(() => {
               }}
             >
               <FontAwesomeIcon icon={faUser} className="header-icon" />
-            </button>
+            </span>
           </li>
         </ul>
       </nav>
+
       {showLogoutPopup && (
         <div style={{
           position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
