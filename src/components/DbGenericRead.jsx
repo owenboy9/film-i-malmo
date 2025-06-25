@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../supabase'
 
-export default function DbGenericRead({ table, fields = [], filter }) {
+export default function DbGenericRead({ table, fields = [], filter, hideHeaders = false }) {
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(true)
   const [errorMsg, setErrorMsg] = useState(null)
@@ -92,7 +92,11 @@ export default function DbGenericRead({ table, fields = [], filter }) {
             <li key={row.id}>
               {fields.map(f => (
                 <span key={`${row.id}-${f.name}`} style={{ display: 'block' }}>
-                  <strong>{f.name}:</strong>{' '}
+                  {!hideHeaders && (
+                    <>
+                      <strong>{f.name}:</strong>{' '}
+                    </>
+                  )}
                   {renderFieldValue(row, f)}
                 </span>
               ))}
