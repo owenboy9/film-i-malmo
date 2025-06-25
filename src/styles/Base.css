@@ -47,4 +47,8 @@ body.dark {
   min-Width: 320; 
   max-Width: 400;
 }
+a {
+  color: #dbbf8b;
+  text-decoration: none;
+}
 
