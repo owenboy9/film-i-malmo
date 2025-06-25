@@ -30,12 +30,13 @@ export default function CalendarTile({ event }) {
       <img
         src={imageUrl}
         alt={event.title}
-        style={{
-          width: '220px',
-          height: '220px',
-          objectFit: 'cover',
-          borderRadius: '8px'
-        }}
+        // style={{
+        //   // width: '220px',
+        //   // height: '220px',
+        //   // objectFit: 'cover',
+          
+        //   borderRadius: '8px'
+        // }}
       />
       <div><b>{event.title}</b></div>
       <div>{event.genre}</div>
