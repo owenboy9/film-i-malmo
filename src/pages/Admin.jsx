@@ -8,7 +8,8 @@ export default function Admin() {
     table: 'about',
     fields: [
       { name: 'title', type: 'text' },
-      { name: 'description', type: 'text' }
+      { name: 'description', type: 'text' },
+      { name: 'img', type: 'file', bucket: 'public-media', required: false }
     ],
     optionLabels: ['title']
   };
@@ -19,7 +20,7 @@ export default function Admin() {
       { name: 'name', type: 'text' },
       { name: 'partnership_type', type: 'select', options: ['sponsor', 'collaborator'] },
       { name: 'logo_path', type: 'text' },
-      { name: 'logo_bucket', type: 'select', options: ['public-media', 'private-media'] }
+      { name: 'img', type: 'file', bucket: 'public-media', required: false }
 
     ],
     optionLabels: ['name']
@@ -31,7 +32,7 @@ export default function Admin() {
       { name: 'title', type: 'text' },
       { name: 'description', type: 'text' },
       { name: 'image_path', type: 'text' },
-        { name: 'image_bucket', type: 'select', options: ['public-media', 'private-media'] },
+        { name: 'img', type: 'file', bucket: 'public-media', required: false },
         { name: 'starts_at', type: 'timestamp' },
         { name: 'genre', type: 'text' },
         { name: 'short_description', type: 'text' },
@@ -68,7 +69,7 @@ export default function Admin() {
       { name: 'link_name_3', type: 'text', required: false },
       { name: 'link_3', type: 'text', required: false },
       { name: 'img_path', type: 'text', required: false },
-      { name: 'img', type: 'select', options: ['public-media', 'private-media'], required: false }
+      { name: 'img', type: 'file', bucket: 'public-media', required: false }
     ],
     optionLabels: ['page']
   }

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../supabase'
 
-const STORAGE_BUCKET = 'public-media'
-
 export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
   const [rows, setRows] = useState([])
   const [selectedId, setSelectedId] = useState('')
@@ -27,7 +25,6 @@ export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
 
   useEffect(() => {
     if (!selectedId) return
-    // Jämför id som strängar för att alltid hitta rätt rad
     const row = rows.find(r => String(r.id) === String(selectedId))
     if (row) {
       setValues(fields.reduce((acc, f) => ({ ...acc, [f.name]: row[f.name] }), {}))
@@ -44,63 +41,75 @@ export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
     })
   }
 
-  // Hjälpfunktion för att ta bort bild från Storage
-  const removeImageFromStorage = async (imageUrl) => {
-    if (!imageUrl) return
-    // Extrahera path efter bucket-namnet
-    const urlParts = imageUrl.split(`${STORAGE_BUCKET}/`)
+  const removeImageFromStorage = async (imageUrl, bucket) => {
+    if (!imageUrl || !bucket) return
+    const urlParts = imageUrl.split(`${bucket}/`)
     if (urlParts.length < 2) return
     const filePath = urlParts[1].split('?')[0]
-    await supabase.storage.from(STORAGE_BUCKET).remove([filePath])
+    await supabase.storage.from(bucket).remove([filePath])
   }
 
-  // Ta bort bild från Storage och tabell
-  const handleRemoveImage = async () => {
+  const handleRemoveImage = async (field) => {
+    const bucket = field.bucket
+    if (!bucket) {
+      alert(`Ingen bucket angiven för fältet "${field.name}". Lägg till 'bucket' i fältdefinitionen.`)
+      return
+    }
+
     setRemoving(true)
-    await removeImageFromStorage(values.image_url)
-    // Uppdatera raden i databasen
+    await removeImageFromStorage(values[field.name], bucket)
     const { data, error } = await supabase
       .from(table)
-      .update({ ...values, image_url: '' })
+      .update({ ...values, [field.name]: '' })
       .eq('id', selectedId)
       .select()
     setResult({ data, error })
-    setValues(v => ({ ...v, image_url: '' }))
+    setValues(v => ({ ...v, [field.name]: '' }))
     setRemoving(false)
     fetchRows()
   }
 
-  // Ladda upp ny bild och ersätt ev. gammal
-  const handleFileChange = async (e) => {
+  const handleFileChange = async (e, field) => {
     const file = e.target.files[0]
-    if (!file) return
+    const bucket = field.bucket
+    if (!file || !bucket) {
+      alert(`Ingen bucket angiven för fältet "${field.name}". Lägg till 'bucket' i fältdefinitionen.`)
+      return
+    }
+
     setUploading(true)
-    // Ta bort gammal bild om den finns
-    if (values.image_url) await removeImageFromStorage(values.image_url)
-    // Ladda upp ny bild
+
+    if (values[field.name]) {
+      await removeImageFromStorage(values[field.name], bucket)
+    }
+
     const filePath = `${Date.now()}_${file.name}`
     const { error: uploadError } = await supabase
       .storage
-      .from(STORAGE_BUCKET)
+      .from(bucket)
       .upload(filePath, file)
+
     if (uploadError) {
       alert('Fel vid uppladdning: ' + uploadError.message)
       setUploading(false)
       return
     }
-    // Hämta publika URL:en
+
     const { data: urlData } = supabase
       .storage
-      .from(STORAGE_BUCKET)
+      .from(bucket)
       .getPublicUrl(filePath)
-    // Uppdatera raden i databasen
+
+    const newValue = urlData.publicUrl
+
     const { data, error } = await supabase
       .from(table)
-      .update({ ...values, image_url: urlData.publicUrl })
+      .update({ ...values, [field.name]: newValue })
       .eq('id', selectedId)
       .select()
+
     setResult({ data, error })
-    setValues(v => ({ ...v, image_url: urlData.publicUrl }))
+    setValues(v => ({ ...v, [field.name]: newValue }))
     setUploading(false)
     fetchRows()
   }
@@ -118,7 +127,6 @@ export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
     fetchRows()
   }
 
-  // --- Sökfunktion ---
   const filteredRows = rows.filter(row =>
     optionLabels.length > 0
       ? optionLabels.some(label =>
@@ -158,11 +166,12 @@ export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
             </option>
           ))}
         </select>
+
         {fields.map(field => (
           <div key={field.name}>
             <label>
               {field.name}:{' '}
-              {field.name === 'image_url' ? (
+              {field.type === 'file' ? (
                 <div>
                   {values[field.name] ? (
                     <>
@@ -173,7 +182,7 @@ export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
                       />
                       <button
                         type="button"
-                        onClick={handleRemoveImage}
+                        onClick={() => handleRemoveImage(field)}
                         disabled={removing || !selectedId}
                         style={{ marginLeft: 8 }}
                       >
@@ -182,7 +191,7 @@ export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
                       <input
                         type="file"
                         accept="image/*"
-                        onChange={handleFileChange}
+                        onChange={e => handleFileChange(e, field)}
                         disabled={uploading || !selectedId}
                         style={{ marginLeft: 8 }}
                       />
@@ -191,12 +200,13 @@ export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={handleFileChange}
+                      onChange={e => handleFileChange(e, field)}
                       disabled={uploading || !selectedId}
+                      required={field.required ?? false}
                     />
                   )}
                   <input
-                    name="image_url"
+                    name={field.name}
                     type="text"
                     value={values[field.name] ?? ''}
                     onChange={e => handleChange(e, 'text')}
@@ -211,8 +221,8 @@ export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
                   name={field.name}
                   value={values[field.name] ?? ''}
                   onChange={e => handleChange(e, field.type)}
-                  required
                   disabled={!selectedId}
+                  required={field.required ?? false}
                 >
                   <option value="">Välj...</option>
                   {field.options && field.options.map(opt => (
@@ -233,13 +243,14 @@ export default function DbGenericUpdate({ table, fields, optionLabels = [] }) {
                   type={field.type}
                   value={values[field.name] ?? ''}
                   onChange={e => handleChange(e, field.type)}
-                  required
+                  required={field.required ?? false}
                   disabled={!selectedId}
                 />
               )}
             </label>
           </div>
         ))}
+
         <button type="submit" disabled={loading || !selectedId}>
           {loading ? 'Uppdaterar...' : 'Uppdatera'}
         </button>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { supabase } from '../supabase'
 
-export default function DbGenericInsert({ table, fields, storageBucket = 'public-media' }) {
+export default function DbGenericInsert({ table, fields }) {
   const initialValues = Object.fromEntries(
     fields.map(f => [f.name, f.type === 'checkbox' ? false : ''])
   )
@@ -20,33 +20,40 @@ export default function DbGenericInsert({ table, fields, storageBucket = 'public
     })
   }
 
-  // Hantera filuppladdning
-  const handleFileChange = async (e) => {
+  const handleGenericFileChange = async (e, field) => {
     const file = e.target.files[0]
     if (!file) return
+    const bucket = field.bucket
+    if (!bucket) {
+      alert(`Ingen bucket angiven för fältet "${field.name}". Lägg till 'bucket' i fältdefinitionen.`)
+      return
+    }
+
     setUploading(true)
     const filePath = `${Date.now()}_${file.name}`
+
     const { data, error } = await supabase
       .storage
-      .from(storageBucket)
+      .from(bucket)
       .upload(filePath, file)
+
     setUploading(false)
+
     if (error) {
       alert('Fel vid uppladdning: ' + error.message)
     } else {
-      // Hämta publika URL:en
       const { data: urlData } = supabase
         .storage
-        .from(storageBucket)
+        .from(bucket)
         .getPublicUrl(filePath)
-      setValues(v => ({ ...v, image_url: urlData.publicUrl }))
+
+      setValues(v => ({ ...v, [field.name]: urlData.publicUrl }))
     }
   }
 
   const handleInsert = async (e) => {
     e.preventDefault()
     const insertValues = { ...values }
-    // Konvertera tomma strängar till null om du vill
     Object.keys(insertValues).forEach(key => {
       if (insertValues[key] === '') insertValues[key] = null
     })
@@ -73,33 +80,38 @@ export default function DbGenericInsert({ table, fields, storageBucket = 'public
                   name={field.name}
                   value={values[field.name]}
                   onChange={e => handleChange(e, field.type)}
-                  required
+                  required={field.required ?? false}
                 >
                   <option value="">Välj...</option>
                   {field.options.map(opt => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}
                 </select>
-                
-                ) : field.name === 'image_url' ? (
+              ) : field.type === 'file' ? (
                 <>
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={handleFileChange}
+                    onChange={e => handleGenericFileChange(e, field)}
                     disabled={uploading}
+                    required={field.required ?? false}
                   />
-                  {values.image_url && (
-                    <img src={values.image_url} alt="Förhandsvisning" style={{maxWidth: 100}} />
+                  {values[field.name] && (
+                    <>
+                      <img
+                        src={values[field.name]}
+                        alt="Förhandsvisning"
+                        style={{ maxWidth: 100, marginTop: 8 }}
+                      />
+                      <input
+                        name={field.name}
+                        type="text"
+                        value={values[field.name]}
+                        onChange={e => handleChange(e, 'text')}
+                        readOnly
+                      />
+                    </>
                   )}
-                  <input
-                    name="image_url"
-                    type="text"
-                    value={values.image_url}
-                    onChange={e => handleChange(e, 'text')}
-                    placeholder="Bildens URL"
-                    readOnly
-                  />
                 </>
               ) : field.type === 'checkbox' ? (
                 <input
@@ -114,7 +126,7 @@ export default function DbGenericInsert({ table, fields, storageBucket = 'public
                   type={field.type}
                   value={values[field.name]}
                   onChange={e => handleChange(e, field.type)}
-                  required
+                  required={field.required ?? false}
                 />
               )}
             </label>
