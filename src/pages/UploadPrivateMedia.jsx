@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from '../supabaseClient'; // adjust path if needed
+import { supabase } from '../supabase'; // adjust path if needed
 
 export default function UploadPrivateMedia() {
   const [file, setFile] = useState(null);

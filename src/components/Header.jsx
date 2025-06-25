@@ -123,7 +123,7 @@ export default function Header({ setShowAuth, user }) {
         <ul>
           <li>
             <NavLink
-              to="/schedule"
+              to="/calendar"
               onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
               className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
             >

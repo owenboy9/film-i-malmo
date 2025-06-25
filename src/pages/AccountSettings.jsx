@@ -50,6 +50,7 @@ export default function AccountSettings() {
   const [popupUserId, setPopupUserId] = useState(null); // For which user to show
   const [pendingRenewal, setPendingRenewal] = useState(null);
   const [joinedUsers, setJoinedUsers] = useState([]);
+  const [roleToSet, setRoleToSet] = useState('user');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -118,8 +119,17 @@ export default function AccountSettings() {
   // Fetch all memberships (for superuser)
   const fetchAllMemberships = async () => {
     if (membership?.role === 'superuser') {
-      const { data } = await supabase.from('user_membership').select('*');
-      setAllMemberships(data || []);
+      const { data, error } = await supabase
+        .from('user_membership')
+        .select('id, role, is_member, last_payment, valid_through, users(email)')
+      if (!error && data) {
+        // Merge email into each membership row for easy access
+        const withEmail = data.map(m => ({
+          ...m,
+          email: m.users?.email || ''
+        }));
+        setAllMemberships(withEmail);
+      }
     }
   };
 
@@ -176,6 +186,14 @@ useEffect(() => {
     const city = user?.user_metadata?.address_city || '';
     if (!street && !num && !city) return '';
     return `${street} ${num}, ${city}`.trim();
+  };
+
+  // Helper to get UID by email
+  const getUidByEmail = async (email) => {
+    // Try to find in users table
+    const { data, error } = await supabase.from('users').select('id').eq('email', email).single();
+    if (error || !data) return null;
+    return data.id;
   };
 
   // Admin: Add new member (sign up style)
@@ -236,20 +254,26 @@ useEffect(() => {
   const handleEditMember = async () => {
     setAdminActionMsg('');
     try {
+      // Look up UID by email
+      const uid = await getUidByEmail(editMemberId);
+      if (!uid) {
+        setAdminActionMsg('No user found with that email.');
+        return;
+      }
       const res = await fetch('http://localhost:4000/api/edit-member', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          id: editMemberId,
+          id: uid,
           ...editMemberData
         })
       });
       const result = await res.json();
       if (res.ok) {
         setAdminActionMsg('Member info updated!');
-        // Optionally refresh members list here
         await fetchDbUsers();
         await fetchAllMemberships();
+        window.location.reload(); // <-- Add this line to refresh the page
       } else {
         setAdminActionMsg(result.error || 'Failed to update member.');
       }
@@ -259,18 +283,23 @@ useEffect(() => {
   };
 
   // Admin: Delete member
-  const handleDeleteMember = async (id) => {
+  const handleDeleteMember = async (email) => {
     setAdminActionMsg('');
     try {
+      // Look up UID by email
+      const uid = await getUidByEmail(email);
+      if (!uid) {
+        setAdminActionMsg('No user found with that email.');
+        return;
+      }
       const res = await fetch('http://localhost:4000/api/delete-member', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
+        body: JSON.stringify({ id: uid })
       });
       const result = await res.json();
       if (res.ok) {
         setAdminActionMsg('Member deleted!');
-        // Optionally refresh members list here
         await fetchDbUsers();
         await fetchAllMemberships();
       } else {
@@ -376,6 +405,41 @@ useEffect(() => {
     }
   };
 
+  // New handler to set user role (superuser only)
+  const handleSetUserRole = async () => {
+    setAdminActionMsg('');
+    if (!adminUid) {
+      setAdminActionMsg('Please enter a user UID.');
+      return;
+    }
+    if (user && adminUid === user.id) {
+      setAdminActionMsg('You cannot change your own role.');
+      return;
+    }
+    // Fetch current role
+    const { data: member, error } = await supabase
+      .from('user_membership')
+      .select('role')
+      .eq('id', adminUid)
+      .single();
+    if (error || !member) {
+      setAdminActionMsg('User not found.');
+      return;
+    }
+    const { error: updateError } = await supabase
+      .from('user_membership')
+      .update({ role: roleToSet })
+      .eq('id', adminUid);
+    if (updateError) {
+      setAdminActionMsg('Failed to update role: ' + updateError.message);
+    } else {
+      setAdminActionMsg(`Role updated to ${roleToSet}.`);
+      // Refresh memberships table
+      const { data } = await supabase.from('user_membership').select('*');
+      setAllMemberships(data || []);
+    }
+  };
+
   // Filtered users based on search
   const filteredDbUsers = dbUsers.filter(u => {
     const term = searchTerm.toLowerCase();
@@ -413,8 +477,6 @@ useEffect(() => {
       </div>
       <button onClick={() => navigate('/edit-account-settings')}>Edit</button>
       <button onClick={() => navigate('/renew-membership')} style={{ marginLeft: 8 }}>Renew Membership</button>
-      <button onClick={() => supabase.auth.signOut()} style={{ marginLeft: 8 }}>Logout</button>
-      <button onClick={() => navigate('/')} style={{ marginLeft: 8 }}>Back to Home</button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {success && <p style={{ color: 'green' }}>{success}</p>}
 
@@ -452,6 +514,7 @@ useEffect(() => {
                       u.email?.toLowerCase().includes(term)
                     );
                   })
+                  .sort((a, b) => (a.email || '').localeCompare(b.email || '')) // <-- sort by email A-Z
                   .map(u => (
                     <tr
                       key={u.id}
@@ -536,14 +599,6 @@ useEffect(() => {
                 /> Newsletter
               </label>
               <br />
-              <select
-                value={newMember.role}
-                onChange={e => setNewMember({ ...newMember, role: e.target.value })}
-              >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-              </select>
-              <br />
               <button onClick={handleAddMember} style={{ marginTop: 8 }}>Add Member</button>
             </div>
           )}
@@ -551,8 +606,8 @@ useEffect(() => {
           {/* Edit member info */}
           <h4>Edit Member Info</h4>
           <input
-            type="text"
-            placeholder="User UID"
+            type="email"
+            placeholder="User Email"
             value={editMemberId}
             onChange={e => setEditMemberId(e.target.value)}
           /><br />
@@ -605,8 +660,8 @@ useEffect(() => {
           {/* Delete member */}
           <h4>Delete Member</h4>
           <input
-            type="text"
-            placeholder="User UID"
+            type="email"
+            placeholder="User Email"
             value={deleteUid}
             onChange={e => setDeleteUid(e.target.value)}
           />
@@ -681,7 +736,7 @@ useEffect(() => {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>UID</th>
+                  <th style={{ border: '1px solid #ccc', padding: 4 }}>Email</th>
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>Role</th>
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>Is Member</th>
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>Last Payment</th>
@@ -695,7 +750,7 @@ useEffect(() => {
                     style={{ cursor: 'pointer' }}
                     onClick={() => setPopupUserId(m.id)}
                   >
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{m.id}</td>
+                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{m.email}</td>
                     <td style={{ border: '1px solid #ccc', padding: 4 }}>{m.role}</td>
                     <td style={{ border: '1px solid #ccc', padding: 4 }}>{m.is_member ? 'Yes' : 'No'}</td>
                     <td style={{ border: '1px solid #ccc', padding: 4 }}>{m.last_payment || ''}</td>
@@ -706,9 +761,9 @@ useEffect(() => {
             </table>
           </div>
 
-          {/* Grant/remove admin status */}
+          {/* Set user role (superuser only) */}
           <div style={{ marginTop: 24 }}>
-            <h4>Grant or Remove Admin Status</h4>
+            <h4>Set User Role (Superuser only)</h4>
             <input
               type="text"
               placeholder="User UID"
@@ -716,11 +771,17 @@ useEffect(() => {
               onChange={e => setAdminUid(e.target.value)}
               style={{ marginRight: 8 }}
             />
-            <button onClick={() => handleToggleAdmin(true)} style={{ marginRight: 8 }}>
-              Grant Admin
-            </button>
-            <button onClick={() => handleToggleAdmin(false)}>
-              Remove Admin
+            <select
+              value={roleToSet}
+              onChange={e => setRoleToSet(e.target.value)}
+              style={{ marginRight: 8 }}
+            >
+              <option value="user">user</option>
+              <option value="admin">admin</option>
+              <option value="superuser">superuser</option>
+            </select>
+            <button onClick={handleSetUserRole}>
+              Set Role
             </button>
             {adminActionMsg && <div style={{ color: 'green', marginTop: 8 }}>{adminActionMsg}</div>}
           </div>

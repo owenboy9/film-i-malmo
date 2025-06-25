@@ -24,6 +24,7 @@ import EditAccountSettings from './pages/EditAccountSettings'
 import { supabase } from './supabase';
 import Calendar from './pages/Calendar';
 import Auth from './components/Auth'; // Make sure this is imported
+import UploadPrivateMedia from './pages/UploadPrivateMedia'; // <-- add this at the top
 
 
 function HashRedirector() {
@@ -181,6 +182,7 @@ function App() {
               <Route path="/account-settings" element={<AccountSettings />} />
               <Route path="/edit-account-settings" element={<EditAccountSettings />} />
               <Route path="/calendar" element={<Calendar />} /> {/* Add the Calendar route */}   
+              <Route path="/upload-private-media" element={<UploadPrivateMedia />} /> {/* <-- add this */}
             </Routes>
           )}
         </div>
