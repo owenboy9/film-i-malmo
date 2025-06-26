@@ -89,6 +89,44 @@ useEffect(() => {
         <FilmiMalmoLogo className="logo" />     
       </NavLink>
 
+      <nav className="nav-user">
+        <ul className="user-menu">
+          <li>
+          <span onClick={toggleTheme}>
+            <FontAwesomeIcon
+              icon={isDarkMode ? faMoon : faSun}
+              className="dark-light-icon"
+            />
+          </span>
+          </li>
+          <li>
+          <span className="user-icon"
+            style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+            onMouseEnter={() => setIsUserIconHovered(true)}
+            onMouseLeave={() => setIsUserIconHovered(false)}
+            onClick={() => {
+              if (user) {
+                setShowLogoutPopup(true);
+              } else {
+                setShowAuth(true);
+              }
+            }}
+          >
+            <FontAwesomeIcon icon={isUserIconHovered ? faArrowRightFromBracket : faUser} className="header-icon" />
+          </span>
+          </li>
+          <li>
+            <NavLink
+              to="/account-settings"
+              onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
+              className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
+            >
+              {user ? 'My Membership' : 'Login'}
+            </NavLink>
+          </li>
+        </ul>
+        </nav>
+
       <span className="hamburger" onClick={toggleMenu} aria-expanded={isMenuOpen}
         aria-label="Toggle navigation menu">
         ☰
@@ -198,40 +236,6 @@ useEffect(() => {
             <NavLink to="/admin" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
               Admin
             </NavLink>
-          </li>
-          <li>
-          <span onClick={toggleTheme}>
-            <FontAwesomeIcon
-              icon={isDarkMode ? faMoon : faSun}
-              className="dark-light-icon"
-            />
-          </span>
-          </li>
-        </ul>
-        <ul className="user-menu">
-          <li>
-            <NavLink
-              to="/account-settings"
-              onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
-              className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
-            >
-              {user ? 'My Membership' : 'Login'}
-            </NavLink>
-          <span> </span>
-            <span className="headerbtn"
-              style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
-              onMouseEnter={() => setIsUserIconHovered(true)}
-              onMouseLeave={() => setIsUserIconHovered(false)}
-              onClick={() => {
-                if (user) {
-                  setShowLogoutPopup(true);
-                } else {
-                  setShowAuth(true);
-                }
-              }}
-            >
-              <FontAwesomeIcon icon={isUserIconHovered ? faArrowRightFromBracket : faUser} className="header-icon" />
-            </span>
           </li>
         </ul>
       </nav>

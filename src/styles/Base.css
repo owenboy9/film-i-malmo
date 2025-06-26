@@ -63,9 +63,9 @@ a:hover {
 /*Button styles */
 button {
   background-color: #dbbf8b;
-  color: #333;
+  color: rgba(32, 2, 2, 0.7) 100%);
   border: none;
-  padding: 0.5rem 0.5rem;
+  padding: 0.2rem 0.5rem;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
