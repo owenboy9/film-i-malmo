@@ -25,7 +25,7 @@
   width: 220px;
   height: 220px;
   object-fit: cover;
-  padding: 16px;
+  padding: 0px;
   border-radius: 8px;
   margin: 12px 0 0 0; /* Remove side margins */
   display: block;
@@ -43,6 +43,11 @@
   margin: 12px 0;
 }
 
+.calendar-tile.faded {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 @media (max-width: 900px) {
   .calendar-grid {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -57,5 +62,64 @@
   .calendar-tile img {
     width: 140px;
     height: 140px;
+  }
+}
+
+/* Popup overlay for event details */
+.calendar-popup-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+/* Popup content */
+.calendar-popup {
+  background: black;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.3);
+  position: relative;
+  color: #fff;
+  text-align: right;
+}
+
+.calendar-popup-img {
+  padding: 0;
+  height: 200px;
+  width: auto;
+  max-height: 300px;
+  max-width: 200px; 
+  object-fit: cover;
+  border-radius: 18px;
+  margin-bottom: 16px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.calendar-popup-content {
+  width: 100%;
+  text-align: left;
+}
+
+.calendar-popup-content h2 {
+  text-align: right;
+}
+
+.calendar-popup-details {
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .calendar-popup-img {
+    max-width: 90vw;
+    height: auto;
+    aspect-ratio: 1 / 1;
   }
 }
