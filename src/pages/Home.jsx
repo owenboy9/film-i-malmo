@@ -4,6 +4,7 @@ import { supabase } from '../supabase'
 import { useNavigate } from 'react-router-dom'
 import CalendarTile from '../components/CalendarTile';
 
+
 export default function Home() {
   const [user, setUser] = useState(null);
   const [showAuth, setShowAuth] = useState(false);
