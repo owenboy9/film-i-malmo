@@ -32,7 +32,7 @@
 .header-icon {
   font-size: 1.0rem;
 }
-.dark-light-icon {
+.dark-light-icon, .user-icon {
   top: 0.2rem;
   position: relative;
   font-size: 1.0rem;
@@ -49,13 +49,50 @@
   color: #f1dca7;
 }
 
+
 /* Desktop nav */
 .nav-desktop {
   position: absolute;
   bottom: 0rem;
-  right: 15rem;
+  right: 37%;
   opacity: 0;
   animation: fadeIn 0.8s ease-in-out forwards;
+}
+/* Nav styles */
+.nav-desktop ul {
+  display: flex;
+  color: white;
+  gap: 20px;
+  list-style: none;
+}
+
+.nav-user {
+  position: absolute;
+  right: 6rem;
+  top: 0rem;
+  bottom: 0rem;
+  display: flex;
+  align-items: center;
+  justify-items: right;
+}
+
+.user-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-self: right;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+@media screen and (max-width: 890px) {
+  .user-menu {
+    scale: 0.8;
+  }
+}
+
+.user-menu li .headerbtn {
+  font-size: 0.7rem;
 }
 
   /* Responsive styles for the header */
@@ -114,13 +151,7 @@
     width: 40px;
   } 
 }
-/* Nav styles */
-.nav-desktop ul {
-  display: flex;
-  color: white;
-  gap: 20px;
-  list-style: none;
-}
+
 
 
 .headerbtn {

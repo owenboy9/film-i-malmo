@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap");
+
 body {
   padding-top: 6rem;
   background: linear-gradient(
@@ -41,14 +43,67 @@ body.dark {
 }
 
 .popup {
-  background-color: chartreuse;
-  padding: 24; 
-  border-Radius: 8; 
-  min-Width: 320; 
-  max-Width: 400;
+  background: black;
+  padding: 24px; 
+  border-Radius: 8px; 
+  min-Width: 320px; 
+  max-Width: 400px;
+  border:rgba(26, 1, 1, 1) 1px solid #dbbf8b;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 a {
   color: #dbbf8b;
   text-decoration: none;
 }
+a:hover {
+  color: #f1dca7;
+  text-decoration: underline;
+}
 
+/*Button styles */
+button {
+  background-color: #dbbf8b;
+  opacity: 0.5;
+  color: rgba(32, 2, 2, 0.7) 100%);
+  border: none;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  margin: 0.5rem;
+}
+button:hover {
+  background-color: #f1dca7;
+  transform: scale(1.05);
+}
+
+/* button {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #000;
+  cursor: pointer;
+  border: 3px solid;
+  border-radius: 6px;
+  padding: 0.25em 0.5em;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  margin: 0.5rem;
+}
+
+button:active {
+  box-shadow: 0px 0px 0px 0px;
+  top: 5px;
+  left: 5px;
+}
+
+@media (min-width: 768px) {
+  .button {
+    padding: 0.25em 0.75em;
+  }
+} */
