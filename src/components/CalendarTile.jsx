@@ -38,8 +38,8 @@ export default function CalendarTile({ event, date, faded, onClick }) {
         src={imageUrl}
         alt={event.title}
         style={{
-          width: '220px',
-          height: '220px',
+          width: '160px',
+          height: '160px',
           objectFit: 'cover',
           borderRadius: '8px'
         }}
