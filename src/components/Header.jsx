@@ -184,8 +184,7 @@ useEffect(() => {
               to="/"
               onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
               className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
-            >
-              Home
+            >Home
             </NavLink>
           </li>
           <li>
@@ -193,8 +192,7 @@ useEffect(() => {
               to="/calendar"
               onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
               className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
-            >
-              Calendar
+            >Calendar
             </NavLink>
           </li>
           <li>
@@ -202,8 +200,7 @@ useEffect(() => {
               to="/about"
               onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
               className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
-            >
-              About
+            >About
             </NavLink>
           </li>
           <li>
@@ -211,8 +208,7 @@ useEffect(() => {
               to="/contact"
               onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
               className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
-            >
-              Contact
+            >Contact
             </NavLink>
           </li>
           <li>

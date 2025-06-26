@@ -22,7 +22,7 @@
   width: 80px;
   color: #dbbf8b;
   top : 0.5rem;
-  left: 6rem;
+  left: 3rem;
   position: absolute;
 }
 .logo:hover {
@@ -70,12 +70,13 @@
 
 .nav-user {
   position: absolute;
-  right: 6rem;
+  right: 3rem;
   top: 0rem;
   bottom: 0rem;
   display: flex;
   align-items: center;
   justify-items: right;
+  width: 80px;
 }
 
 .user-menu {
@@ -84,6 +85,7 @@
   justify-content: flex-end;
   align-items: flex-end;
   list-style: none;
+
   padding: 0;
   margin: 0;
 }
