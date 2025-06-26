@@ -7,6 +7,7 @@ export default function PastEvents() {
   const [loading, setLoading] = useState(false);
   const [from, setFrom] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState(null); // <-- Add this
 
   // Fetch past events in batches of 20, most recent first
   const fetchMore = async () => {
@@ -49,6 +50,8 @@ export default function PastEvents() {
     // eslint-disable-next-line
   }, [hasMore, loading]);
 
+  const closePopup = () => setSelectedEvent(null);
+
   return (
     <div>
       <h2>Past Events</h2>
@@ -59,11 +62,69 @@ export default function PastEvents() {
         justifyContent: 'flex-start'
       }}>
         {events.map(ev => (
-          <CalendarTile key={ev.id} event={ev} />
+          <CalendarTile
+            key={ev.id}
+            event={ev}
+            onClick={() => setSelectedEvent(ev)}
+          />
         ))}
       </div>
       {loading && <div>Loading...</div>}
       {!hasMore && <div style={{ margin: 32, color: '#888' }}>No more events.</div>}
+
+      {selectedEvent && (
+        <div
+          className="calendar-popup-overlay"
+          onClick={closePopup}
+        >
+          <div
+            className="calendar-popup"
+            onClick={e => e.stopPropagation()}
+          >
+            <button
+              onClick={closePopup}
+              style={{
+                position: 'absolute',
+                top: 12, right: 12,
+                background: 'transparent',
+                border: 'none',
+                fontSize: 24,
+                cursor: 'pointer'
+              }}
+              aria-label="Close"
+            >×</button>
+            <img
+              src={
+                selectedEvent.image_path
+                  ? supabase.storage.from('public-media').getPublicUrl(selectedEvent.image_path).data.publicUrl
+                  : '/placeholder.jpg'
+              }
+              alt={selectedEvent.title}
+              className="calendar-popup-img"
+            />
+            <div className="calendar-popup-content">
+              <h2>{selectedEvent.title}</h2>
+              <div className="calendar-popup-details">
+                <div><b>Production year:</b> {selectedEvent.year}</div>
+                <div><b>Director:</b> {selectedEvent.director}</div>
+                <div><b>Duration:</b> {selectedEvent.length}'</div>
+                <div><b>Language:</b> {selectedEvent.language}</div>
+                <div><b>Subtitles:</b> {selectedEvent.subtitles}</div>
+              </div>
+              <div style={{ margin: '12px 0' }}>
+                <br />
+                {selectedEvent.long_description || selectedEvent.description || selectedEvent.short_description}
+              </div>
+              {selectedEvent.age_restriction && (
+                <div><b>Age Restriction:</b> {selectedEvent.age_restriction}</div>
+              )}
+              {selectedEvent.content_warning && (
+                <div><b>Content Warning:</b> {selectedEvent.content_warning}</div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -131,7 +131,9 @@ useEffect(() => {
               onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
               className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
             >
-              {user ? 'My Membership' : 'Login'}
+              {user
+    ? user.user_metadata?.display_name || user.email || 'My Membership'
+    : 'Login'}
             </NavLink>
           </li>
         </ul>
