@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom'; 
 import '../styles/Header.css';
 import { ReactComponent as FilmiMalmoLogo } from '../assets/logo_fim.svg';
@@ -7,7 +7,8 @@ import { faUser, faSun, faMoon, faArrowRightFromBracket } from '@fortawesome/fre
 import { supabase } from '../supabase';
 
 
-export default function Header({ setShowAuth, user }) {
+export default function Header({ setShowAuth }) {
+  const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -81,6 +82,15 @@ useEffect(() => {
     setShowLogoutPopup(false);
     window.location.reload();
   };
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    // Optionally, subscribe to auth changes for live updates
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => { listener?.subscription.unsubscribe(); };
+  }, []);
 
   return (
     <header className={`header ${isHeaderVisible ? 'visible' : 'hidden'}`}>
@@ -165,23 +175,14 @@ useEffect(() => {
             </NavLink>
           </li>
           <li>
-          <span onClick={toggleTheme}>
-            <FontAwesomeIcon
-              icon={isDarkMode ? faMoon : faSun}
-              className="dark-light-icon"
-            />
-          </span>
+            <span onClick={toggleTheme}>
+              <FontAwesomeIcon
+                icon={isDarkMode ? faMoon : faSun}
+                className="dark-light-icon"
+              />
+            </span>
           </li>
-          <li>
-            <NavLink to="/" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
-            <FontAwesomeIcon icon={faUser} className="header-icon" />
-            </NavLink>
-            <span> </span>
-            <NavLink to="/account-settings" onClick={() => { toggleMenu(); setShowAuth(false); window.scrollTo(0, 0); }} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
-              My Membership
-            </NavLink>
 
-          </li> 
         </ul>
       </nav>
 

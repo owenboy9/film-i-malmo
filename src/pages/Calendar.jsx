@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabase';
 import CalendarTile from '../components/CalendarTile';
+import '../styles/Calendar.css';
 
+// Get 21 consecutive days starting today
 function getCalendarDays() {
   const today = new Date();
   const days = [];
@@ -34,13 +36,33 @@ export default function Calendar() {
     eventsByDate[date] = ev;
   });
 
+  // Calculate padding for the first week
+  const firstDateObj = new Date(days[0]);
+  const firstWeekday = firstDateObj.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
+  // If you want weeks to start on Monday:
+  const padDays = (firstWeekday + 6) % 7; // 0=Monday, 6=Sunday
+
+  // Build the grid: pad empty days, then 21 days
+  const tiles = [];
+  for (let i = 0; i < padDays; i++) {
+    tiles.push(<div key={`pad-${i}`} className="calendar-tile" style={{ visibility: 'hidden' }} />);
+  }
+  for (let i = 0; i < days.length; i++) {
+    const date = days[i];
+    tiles.push(
+      <CalendarTile
+        key={date}
+        event={eventsByDate[date]}
+        date={date}
+      />
+    );
+  }
+
   return (
     <div>
       <h2>Calendar</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 16 }}>
-        {days.map(date => (
-          <CalendarTile key={date} event={eventsByDate[date]} />
-        ))}
+      <div className="calendar-grid">
+        {tiles}
       </div>
     </div>
   );

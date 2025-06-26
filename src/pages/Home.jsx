@@ -82,7 +82,7 @@ export default function Home() {
 
 
       <h2>Upcoming Screenings</h2>
-      <div style={{ display: 'flex', gap: 16 }}>
+      <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
         {[0, 1, 2, 3].map(i => (
           <CalendarTile key={i} event={events[i]} />
         ))}
