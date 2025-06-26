@@ -165,11 +165,6 @@ useEffect(() => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/TestDB" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
-            TestDB
-            </NavLink>
-          </li>
-          <li>
             <NavLink to="/admin" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
             Admin
             </NavLink>
@@ -213,15 +208,6 @@ useEffect(() => {
               className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
             >
               More
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/TestDB"
-              onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
-              className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
-            >
-              TestDB
             </NavLink>
           </li>
           <li>

@@ -220,11 +220,12 @@
 }
 
 .popup.popup-logout{
-  background-color: white;
-  padding: 24; 
-  border-Radius: 8; 
-  min-Width: 320; 
-  max-Width: 400;
+  background-color: black;
+  opacity: 0.8;
+  padding: 24px; 
+  border-Radius: 8px; 
+  min-Width: 320px; 
+  max-Width: 400px;
 }
 
 .burgerbtn.active {
