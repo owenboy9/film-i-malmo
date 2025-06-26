@@ -5,10 +5,12 @@
     justify-content: center;
     padding: 20px;
     border-radius: 8px;
+    font-family: "Special Elite", system-ui;
 }
 .more-links {
     align-items: center;
     justify-content: center;
+    font-family: "Special Elite", system-ui;
 }
 
 .newsletter-area, .newsletter {
@@ -23,6 +25,7 @@ input{
 .signUp-btn{
     align-self: center;
     width: 5rem;
+    font-family: "Special Elite", system-ui;
 }
 
 @media screen and (max-width: 700px) {

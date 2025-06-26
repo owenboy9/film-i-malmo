@@ -4,6 +4,7 @@ hr {
 
 p, h1, .checkboxes {
     text-align: center;
+    font-family: "Special Elite", system-ui;
 }
 
 .popup.popup-logout{
@@ -12,4 +13,5 @@ p, h1, .checkboxes {
   border-Radius: 8; 
   min-Width: 320; 
   max-Width: 400;
+  font-family: "Special Elite", system-ui;
 }

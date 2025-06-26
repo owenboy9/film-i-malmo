@@ -10,13 +10,13 @@ export default function MembershipOption({
     <div
       onClick={onSelect}
       style={{
-        border: selected ? '2px solid green' : '2px solid #ccc',
-        padding: '16px',
-        marginBottom: '12px',
         borderRadius: '8px',
         cursor: 'pointer',
-        backgroundColor: selected ? '#f0fff0' : '#fff',
-        transition: '0.2s ease'
+        padding: '16px',
+        width: '100px',
+        backgroundColor: '#dbbf8b',
+        transition: '0.2s ease',
+        opacity: '0.7'
       }}
     >
       <h3 style={{ margin: '0 0 8px' }}>{label}</h3>

@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
 
 
-export default function Header() {
+export default function Footer() {
 
   const [isFooterVisible, setIsFooterVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);

@@ -17,8 +17,10 @@ img {
   font-size: 15px;
   margin: 10px 2px;
   cursor: pointer;
+  font-family: "Special Elite", system-ui;
 }
 
 h2{
     text-align: center;
+    font-family: "Special Elite", system-ui;
 }
