@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import '../styles/Header.css';
 import { ReactComponent as FilmiMalmoLogo } from '../assets/logo_fim.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faSun, faMoon, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { supabase } from '../supabase';
 
 
@@ -12,9 +12,8 @@ export default function Header({ setShowAuth, user }) {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
-
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
+  const [isUserIconHovered, setIsUserIconHovered] = useState(false);
 
   // Dark mode toggle
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -221,6 +220,8 @@ useEffect(() => {
           <span> </span>
             <span className="headerbtn"
               style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+              onMouseEnter={() => setIsUserIconHovered(true)}
+              onMouseLeave={() => setIsUserIconHovered(false)}
               onClick={() => {
                 if (user) {
                   setShowLogoutPopup(true);
@@ -229,7 +230,7 @@ useEffect(() => {
                 }
               }}
             >
-              <FontAwesomeIcon icon={faUser} className="header-icon" />
+              <FontAwesomeIcon icon={isUserIconHovered ? faArrowRightFromBracket : faUser} className="header-icon" />
             </span>
           </li>
         </ul>
