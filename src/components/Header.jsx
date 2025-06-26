@@ -145,6 +145,11 @@ useEffect(() => {
       <nav className={`nav-menu ${isMenuOpen ? 'open' : ''}`}>
         <ul>
           <li>
+            <NavLink to="/" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
+            Home
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/calendar" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
             Calendar
             </NavLink>
@@ -174,6 +179,15 @@ useEffect(() => {
 
       <nav className="nav-desktop">
         <ul>
+          <li>
+            <NavLink
+              to="/"
+              onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
+              className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
+            >
+              Home
+            </NavLink>
+          </li>
           <li>
             <NavLink
               to="/calendar"
