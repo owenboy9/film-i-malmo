@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabase';
 import Auth from '../components/Auth';
 import { useNavigate } from 'react-router-dom';
+import '../styles/AccountSettings.css';
 
 export default function AccountSettings() {
   const [user, setUser] = useState(null);
