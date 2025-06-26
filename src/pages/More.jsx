@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../supabase' // adjust path if needed
+import '../styles/More.css'
 export default function More() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
