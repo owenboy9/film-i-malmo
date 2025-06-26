@@ -23,6 +23,7 @@
   align-items: center;   /* Ensures content is centered horizontally */
   text-align: center;
   font-family: "Special Elite", system-ui;
+  color: #dbbf8b;
 }
 
 .calendar-tile img {

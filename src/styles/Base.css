@@ -12,6 +12,7 @@ body {
             rgba(32, 2, 2, 0.7) 100%);
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Special Elite", system-ui;
+  color: #dbbf8b;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -21,11 +22,13 @@ body {
   flex-direction: column;
   min-height: 100vh;
   font-family: "Special Elite", system-ui;
+  color: #dbbf8b;
 }
 .main-content {
   padding: 2rem;
   padding-bottom: 6rem;
   font-family: "Special Elite", system-ui;
+  color: #c0a87c;
 }
 
 code {

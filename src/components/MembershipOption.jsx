@@ -15,6 +15,7 @@ export default function MembershipOption({
         padding: '16px',
         width: '100px',
         backgroundColor: '#dbbf8b',
+        color: 'black',
         transition: '0.2s ease',
         opacity: '0.7'
       }}
