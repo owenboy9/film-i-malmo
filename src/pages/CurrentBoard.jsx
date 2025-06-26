@@ -1,33 +1,100 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { supabase } from '../supabase'
+import { crudConfigs } from '../components/GenericCrudProps'
 
-export default function currentboard() {
+const SUPABASE_URL = 'https://llslxcymbxcvwrufjaqm.supabase.co'
+
+export default function CurrentBoard() {
+  const currentYear = new Date().getFullYear()
+  const { table } = crudConfigs.rope_runners
+  const [boardMembers, setBoardMembers] = useState([])
+  const [others, setOthers] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    const fetchPeople = async () => {
+      setLoading(true)
+      setError(null)
+      const selectFields = [
+        'id',
+        'name',
+        'role',
+        'pronouns',
+        'bio',
+        'image_path',
+        'image_bucket',
+        'board_member'
+      ].join(', ')
+      const { data, error } = await supabase
+        .from(table)
+        .select(selectFields)
+        .order('id', { ascending: true })
+
+      if (error) {
+        setError(error.message)
+        setLoading(false)
+        return
+      }
+      setBoardMembers(data.filter(r => r.board_member))
+      setOthers(data.filter(r => !r.board_member))
+      setLoading(false)
+    }
+    fetchPeople()
+  }, [table])
+
+  const renderPerson = (row) => {
+    const url =
+      row.image_path && row.image_bucket
+        ? `${SUPABASE_URL}/storage/v1/object/public/${row.image_bucket}/${row.image_path}`
+        : null
+
+    return (
+      <div
+        key={row.id}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          marginBottom: '2rem',
+        }}
+      >
+        <div>
+          {url && (
+            <img
+              src={url}
+              alt={row.name || 'image'}
+              style={{
+                maxHeight: 120,
+                width: 'auto',
+                display: 'block'
+              }}
+            />
+          )}
+        </div>
+        <div style={{ color: 'white', marginLeft: 24 }}>
+          <h2 style={{ margin: 0 }}>{row.name}</h2>
+          <h3 style={{ margin: '0.25rem 0' }}>{row.role}</h3>
+          <p style={{ margin: '0.25rem 0', fontStyle: 'italic' }}>{row.pronouns}</p>
+          <p style={{ margin: '1rem 0 0 0' }}>{row.bio}</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (loading) return <div>Loading...</div>
+  if (error) return <div style={{ color: 'red' }}>Error: {error}</div>
+
   return (
     <div>
-      <h1>Current Board</h1>
+      <h1 style={{ color: 'white' }}>The People Behind Film i Malmö</h1>
 
-      <p>
-        The current board of Film i Malmö consists of the following members:</p>
+      <h2 style={{ color: 'white' }}>Board Members {currentYear}</h2>
+      {boardMembers.length === 0 && <p style={{ color: 'white' }}>No board members found.</p>}
+      {boardMembers.map(renderPerson)}
 
-        
-        <img src="https://filmimalmo.se/wp-content/uploads/2024/08/454525490_516043230889102_1059374835688045188_n.jpg" alt="anna" />
-        < br />
-
-
-        <img src="https://filmimalmo.se/wp-content/uploads/2025/06/97225421-0b99-4595-8401-5f8725bf45ea-840x1024.jpeg" alt="amalia" />< br />
-
-
-        <img src="https://filmimalmo.se/wp-content/uploads/2024/08/453080059_518856297173286_6907060641851160063_n-768x1024.jpg" alt="volha" />< br/>
-
-        <hr/>
-
-        <h2>GOOD-TO-KNOW NOT-BOARD-MEMBERS</h2>
-
-
-        <img src="https://filmimalmo.se/wp-content/uploads/2023/12/paul-the-poet-768x1024.png" alt="paul" />< br />
-
-
-        <img src="https://filmimalmo.se/wp-content/uploads/2022/05/IMG_20220530_201926-707x1536.jpg" alt="owen" />
-
+      <h2 style={{ color: 'white' }}>Good to know others</h2>
+      {others.length === 0 && <p style={{ color: 'white' }}>No others found.</p>}
+      {others.map(renderPerson)}
     </div>
   )
 }
