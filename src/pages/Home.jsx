@@ -3,6 +3,7 @@ import Auth from '../components/Auth'
 import { supabase } from '../supabase'
 import { useNavigate } from 'react-router-dom'
 import CalendarTile from '../components/CalendarTile';
+import '../styles/Home.css'
 
 
 export default function Home() {
@@ -83,9 +84,9 @@ export default function Home() {
 
 
       <h2>Upcoming Screenings</h2>
-      <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
+      <div className='home-calendar-tiles'>
         {[0, 1, 2, 3].map(i => (
-          <CalendarTile key={i} event={events[i]} />
+          <CalendarTile key={i} event={events[i]} className='single-calendar-tile' />
         ))}
       </div>
     </div>

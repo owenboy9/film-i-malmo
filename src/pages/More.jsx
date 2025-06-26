@@ -16,13 +16,15 @@ export default function More() {
       <h1>More Links</h1>
           
           
-      
+      <div className='more-links'>
       <a href="/Freescreen"><button>Freescreen</button></a> 
-      <a href="/PastEvents" ><button>Past Events</button></a> < br />
+      <a href="/PastEvents" ><button>Past Events</button></a>
       <a href="/CurrentBoard" ><button>Current Board</button></a> 
-      <a href="/Hypnos" ><button>Café</button></a> < br />
+      <a href="/Hypnos" ><button>Café</button></a>
       <a href="https://hypnostheatre.com/" target="_blank" ><button>Hypnos</button></a> 
       <a href="/Volunteering" ><button>Volunteering</button></a>
+      </div>
+      
 
 
             {/* <a href="/Press" className="morebuttons">Press</a>  */}
@@ -30,12 +32,14 @@ export default function More() {
             {/* <a href="/CurrentPastProjects" className="morebuttons">Current & Past Projects</a>  */}
            
 
-            <hr/>
+            
 
-            <h2> Newsletter</h2>
+            <div className='newsletter-area'>
+              <h2> Newsletter</h2>
             <form className="newsletter">
-            <input type="text" placeholder="Email" /><button type="submit" >Sign up</button><br/>
+            <input type="text" className='newsletter-email' placeholder="Email" /><button className= 'signUp-btn' type="submit" >Sign up</button><br/>
             </form>
+            </div>
             
             {/* <p> logo folder</p> <br /> */}
 
