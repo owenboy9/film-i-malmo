@@ -6,9 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faSun, faMoon, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { supabase } from '../supabase';
 
-
 export default function Header({ setShowAuth }) {
   const [user, setUser] = useState(null);
+  const [userRole, setUserRole] = useState(null); // <-- Add this
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -91,6 +91,21 @@ useEffect(() => {
     });
     return () => { listener?.subscription.unsubscribe(); };
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from('user_membership')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+        .then(({ data }) => {
+          setUserRole(data?.role || null);
+        });
+    } else {
+      setUserRole(null);
+    }
+  }, [user]);
 
   return (
     <header className={`header ${isHeaderVisible ? 'visible' : 'hidden'}`}>
@@ -177,11 +192,13 @@ useEffect(() => {
             More
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/admin" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
-            Admin
-            </NavLink>
-          </li>
+          {userRole === 'admin' || userRole === 'superuser' ? (
+            <li>
+              <NavLink to="/admin" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}>
+                Admin
+              </NavLink>
+            </li>
+          ) : null}
         </ul>
       </nav>
 
@@ -228,11 +245,13 @@ useEffect(() => {
               More
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/admin" onClick={() => {window.scrollTo(0, 0);}}className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
-              Admin
-            </NavLink>
-          </li>
+          {userRole === 'admin' || userRole === 'superuser' ? (
+            <li>
+              <NavLink to="/admin" onClick={() => {window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}>
+                Admin
+              </NavLink>
+            </li>
+          ) : null}
         </ul>
       </nav>
 
