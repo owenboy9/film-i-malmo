@@ -47,6 +47,11 @@
   opacity: 0.4;
   pointer-events: none;
 }
+.calendar-fim-logo {
+  width: 150px;
+  color: #dbbf8b;
+}
+
 
 @media (max-width: 900px) {
   .calendar-grid {
