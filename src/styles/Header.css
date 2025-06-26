@@ -237,6 +237,9 @@
     display: block;
     animation: fadeIn 1s ease-in-out forwards;
   }
+  .nav-user {
+    right: 0rem;
+  }
   .nav-desktop {
     display: none;
   }
