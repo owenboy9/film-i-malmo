@@ -209,7 +209,7 @@ useEffect(() => {
           </span>
           </li>
         </ul>
-        <ul>
+        <ul className="user-menu">
           <li>
             <NavLink
               to="/account-settings"

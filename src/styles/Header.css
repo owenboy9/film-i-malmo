@@ -65,6 +65,11 @@
   list-style: none;
 }
 
+
+.user-menu li .headerbtn {
+  font-size: 0.7rem;
+}
+
   /* Responsive styles for the header */
 .hamburger {
   font-size: 28px;
