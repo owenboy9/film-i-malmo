@@ -6,16 +6,10 @@ p, h1, .checkboxes {
     text-align: center;
 }
 
-
-.button {
-  background-color: #004aa0; 
-  border: none;
-  color: #dbbf8b;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 15px;
-  margin: 10px 2px;
-  cursor: pointer;
+.popup.popup-logout{
+  background-color: white;
+  padding: 24; 
+  border-Radius: 8; 
+  min-Width: 320; 
+  max-Width: 400;
 }

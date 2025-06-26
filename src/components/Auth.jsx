@@ -28,8 +28,21 @@ export default function Auth() {
       setError('Passwords do not match.')
       return
     }
+
+    // Check if email exists in users table
+    const { data: existing, error: existingError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', email)
+      .single();
+
+    if (existing) {
+      setError('This email is already registered. Please log in or use another email.');
+      return;
+    }
+
     const displayName = `${firstName} ${lastName}`.trim()
-    // 1. Sign up with Supabase Auth
+    // Try to sign up with Supabase Auth
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -45,8 +58,20 @@ export default function Auth() {
         }
       }
     })
+
     if (error) {
-      setError(error.message)
+      // Check for "already registered" error
+      if (
+        error.message &&
+        (error.message.toLowerCase().includes('already registered') ||
+         error.message.toLowerCase().includes('user already exists') ||
+         error.message.toLowerCase().includes('duplicate key') ||
+         error.message.toLowerCase().includes('user already registered'))
+      ) {
+        setError('This email is already registered. Please log in or use another email.');
+      } else {
+        setError(error.message)
+      }
       return
     }
 
@@ -75,7 +100,7 @@ export default function Auth() {
       }
       return;
     }
-    navigate('/');
+    window.location.reload(); // Force a full page reload after login
   }
 
   const handleResetPassword = async () => {

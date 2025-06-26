@@ -48,6 +48,9 @@ export default function AccountSettings() {
   const [searchTerm, setSearchTerm] = useState('');
   const [membershipPopup, setMembershipPopup] = useState(null); // For popup data
   const [popupUserId, setPopupUserId] = useState(null); // For which user to show
+  const [pendingRenewal, setPendingRenewal] = useState(null);
+  const [joinedUsers, setJoinedUsers] = useState([]);
+  const [roleToSet, setRoleToSet] = useState('user');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -116,8 +119,17 @@ export default function AccountSettings() {
   // Fetch all memberships (for superuser)
   const fetchAllMemberships = async () => {
     if (membership?.role === 'superuser') {
-      const { data } = await supabase.from('user_membership').select('*');
-      setAllMemberships(data || []);
+      const { data, error } = await supabase
+        .from('user_membership')
+        .select('id, role, is_member, last_payment, valid_through, users(email)')
+      if (!error && data) {
+        // Merge email into each membership row for easy access
+        const withEmail = data.map(m => ({
+          ...m,
+          email: m.users?.email || ''
+        }));
+        setAllMemberships(withEmail);
+      }
     }
   };
 
@@ -135,13 +147,37 @@ export default function AccountSettings() {
     }
   }, [popupUserId]);
 
+  // Fetch joined users data
+  const fetchJoinedUsers = async () => {
+    const { data: users, error: userError } = await supabase.from('users').select('id, first_name, last_name, email');
+    const { data: memberships, error: memError } = await supabase.from('user_membership').select('id, valid_through');
+    console.log('users:', users, 'memberships:', memberships, userError, memError);
+    if (!userError && !memError) {
+      const merged = users.map(u => ({
+        ...u,
+        user_membership: memberships.find(m => m.id === u.id)
+      }));
+      setJoinedUsers(merged);
+    } else {
+      setJoinedUsers([]);
+    }
+  };
+
+  const isSuperuser = membership?.role === 'superuser';
+  const isAdmin = membership?.role === 'admin' || membership?.role === 'superuser';
+  const birthDate = user?.user_metadata?.birth_date || '';
+
+// Place the useEffect here, after fetchJoinedUsers and isAdmin are defined:
+useEffect(() => {
+  if (isAdmin) {
+    fetchJoinedUsers();
+  }
+}, [isAdmin]);
   if (!user) {
     return <Auth />;
   }
   
-  const isSuperuser = membership?.role === 'superuser';
-  const isAdmin = membership?.role === 'admin' || membership?.role === 'superuser';
-  const birthDate = user.user_metadata?.birth_date || '';
+
 
   // Helper to display address
   const formatAddress = (user) => {
@@ -150,6 +186,14 @@ export default function AccountSettings() {
     const city = user?.user_metadata?.address_city || '';
     if (!street && !num && !city) return '';
     return `${street} ${num}, ${city}`.trim();
+  };
+
+  // Helper to get UID by email
+  const getUidByEmail = async (email) => {
+    // Try to find in users table
+    const { data, error } = await supabase.from('users').select('id').eq('email', email).single();
+    if (error || !data) return null;
+    return data.id;
   };
 
   // Admin: Add new member (sign up style)
@@ -210,20 +254,26 @@ export default function AccountSettings() {
   const handleEditMember = async () => {
     setAdminActionMsg('');
     try {
+      // Look up UID by email
+      const uid = await getUidByEmail(editMemberId);
+      if (!uid) {
+        setAdminActionMsg('No user found with that email.');
+        return;
+      }
       const res = await fetch('http://localhost:4000/api/edit-member', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          id: editMemberId,
+          id: uid,
           ...editMemberData
         })
       });
       const result = await res.json();
       if (res.ok) {
         setAdminActionMsg('Member info updated!');
-        // Optionally refresh members list here
         await fetchDbUsers();
         await fetchAllMemberships();
+        window.location.reload(); // <-- Add this line to refresh the page
       } else {
         setAdminActionMsg(result.error || 'Failed to update member.');
       }
@@ -233,18 +283,23 @@ export default function AccountSettings() {
   };
 
   // Admin: Delete member
-  const handleDeleteMember = async (id) => {
+  const handleDeleteMember = async (email) => {
     setAdminActionMsg('');
     try {
+      // Look up UID by email
+      const uid = await getUidByEmail(email);
+      if (!uid) {
+        setAdminActionMsg('No user found with that email.');
+        return;
+      }
       const res = await fetch('http://localhost:4000/api/delete-member', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
+        body: JSON.stringify({ id: uid })
       });
       const result = await res.json();
       if (res.ok) {
         setAdminActionMsg('Member deleted!');
-        // Optionally refresh members list here
         await fetchDbUsers();
         await fetchAllMemberships();
       } else {
@@ -350,6 +405,41 @@ export default function AccountSettings() {
     }
   };
 
+  // New handler to set user role (superuser only)
+  const handleSetUserRole = async () => {
+    setAdminActionMsg('');
+    if (!adminUid) {
+      setAdminActionMsg('Please enter a user UID.');
+      return;
+    }
+    if (user && adminUid === user.id) {
+      setAdminActionMsg('You cannot change your own role.');
+      return;
+    }
+    // Fetch current role
+    const { data: member, error } = await supabase
+      .from('user_membership')
+      .select('role')
+      .eq('id', adminUid)
+      .single();
+    if (error || !member) {
+      setAdminActionMsg('User not found.');
+      return;
+    }
+    const { error: updateError } = await supabase
+      .from('user_membership')
+      .update({ role: roleToSet })
+      .eq('id', adminUid);
+    if (updateError) {
+      setAdminActionMsg('Failed to update role: ' + updateError.message);
+    } else {
+      setAdminActionMsg(`Role updated to ${roleToSet}.`);
+      // Refresh memberships table
+      const { data } = await supabase.from('user_membership').select('*');
+      setAllMemberships(data || []);
+    }
+  };
+
   // Filtered users based on search
   const filteredDbUsers = dbUsers.filter(u => {
     const term = searchTerm.toLowerCase();
@@ -401,7 +491,7 @@ export default function AccountSettings() {
           <h4>All Members (Database Table)</h4>
           <input
             type="text"
-            placeholder="Search by UID, First, Last Name or Email"
+            placeholder="Search by First, Last Name or Email"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             style={{ marginBottom: 8, width: 300 }}
@@ -410,33 +500,39 @@ export default function AccountSettings() {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>ID</th>
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>First Name</th>
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>Last Name</th>
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>Email</th>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>Birth Date</th>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>Street</th>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>Street Num</th>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>City</th>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>Newsletter</th>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>Created At</th>
+                  <th style={{ border: '1px solid #ccc', padding: 4 }}>Valid Through</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredDbUsers.map(u => (
-                  <tr key={u.id} style={{ cursor: 'pointer' }} onClick={() => setPopupUserId(u.id)}>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.id}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.first_name}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.last_name}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.email}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.birth_date}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.address_street}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.address_st_num}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.address_city}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.newsletter ? 'Yes' : 'No'}</td>
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.created_at}</td>
-                  </tr>
-                ))}
+                {joinedUsers
+                  .filter(u => {
+                    const term = searchTerm.toLowerCase();
+                    return (
+                      u.first_name?.toLowerCase().includes(term) ||
+                      u.last_name?.toLowerCase().includes(term) ||
+                      u.email?.toLowerCase().includes(term)
+                    );
+                  })
+                  .sort((a, b) => (a.email || '').localeCompare(b.email || '')) // <-- sort by email A-Z
+                  .map(u => (
+                    <tr
+                      key={u.id}
+                      style={{ border: '1px solid #ccc', padding: 4, cursor: 'pointer' }}
+                      onClick={() => setPopupUserId(u.id)}
+                    >
+                      <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.first_name}</td>
+                      <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.last_name}</td>
+                      <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.email}</td>
+                      <td style={{ border: '1px solid #ccc', padding: 4 }}>
+                        {u.user_membership?.valid_through
+                          ? new Date(u.user_membership.valid_through).toISOString().slice(0, 10)
+                          : ''}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
@@ -505,14 +601,6 @@ export default function AccountSettings() {
                 /> Newsletter
               </label>
               <br />
-              <select
-                value={newMember.role}
-                onChange={e => setNewMember({ ...newMember, role: e.target.value })}
-              >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-              </select>
-              <br />
               <button onClick={handleAddMember} style={{ marginTop: 8 }}>Add Member</button>
             </div>
           )}
@@ -520,8 +608,8 @@ export default function AccountSettings() {
           {/* Edit member info */}
           <h4>Edit Member Info</h4>
           <input
-            type="text"
-            placeholder="User UID"
+            type="email"
+            placeholder="User Email"
             value={editMemberId}
             onChange={e => setEditMemberId(e.target.value)}
           /><br />
@@ -574,8 +662,8 @@ export default function AccountSettings() {
           {/* Delete member */}
           <h4>Delete Member</h4>
           <input
-            type="text"
-            placeholder="User UID"
+            type="email"
+            placeholder="User Email"
             value={deleteUid}
             onChange={e => setDeleteUid(e.target.value)}
           />
@@ -650,7 +738,7 @@ export default function AccountSettings() {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
-                  <th style={{ border: '1px solid #ccc', padding: 4 }}>UID</th>
+                  <th style={{ border: '1px solid #ccc', padding: 4 }}>Email</th>
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>Role</th>
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>Is Member</th>
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>Last Payment</th>
@@ -664,7 +752,7 @@ export default function AccountSettings() {
                     style={{ cursor: 'pointer' }}
                     onClick={() => setPopupUserId(m.id)}
                   >
-                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{m.id}</td>
+                    <td style={{ border: '1px solid #ccc', padding: 4 }}>{m.email}</td>
                     <td style={{ border: '1px solid #ccc', padding: 4 }}>{m.role}</td>
                     <td style={{ border: '1px solid #ccc', padding: 4 }}>{m.is_member ? 'Yes' : 'No'}</td>
                     <td style={{ border: '1px solid #ccc', padding: 4 }}>{m.last_payment || ''}</td>
@@ -675,9 +763,9 @@ export default function AccountSettings() {
             </table>
           </div>
 
-          {/* Grant/remove admin status */}
+          {/* Set user role (superuser only) */}
           <div style={{ marginTop: 24 }}>
-            <h4>Grant or Remove Admin Status</h4>
+            <h4>Set User Role (Superuser only)</h4>
             <input
               type="text"
               placeholder="User UID"
@@ -685,11 +773,17 @@ export default function AccountSettings() {
               onChange={e => setAdminUid(e.target.value)}
               style={{ marginRight: 8 }}
             />
-            <button onClick={() => handleToggleAdmin(true)} style={{ marginRight: 8 }}>
-              Grant Admin
-            </button>
-            <button onClick={() => handleToggleAdmin(false)}>
-              Remove Admin
+            <select
+              value={roleToSet}
+              onChange={e => setRoleToSet(e.target.value)}
+              style={{ marginRight: 8 }}
+            >
+              <option value="user">user</option>
+              <option value="admin">admin</option>
+              <option value="superuser">superuser</option>
+            </select>
+            <button onClick={handleSetUserRole}>
+              Set Role
             </button>
             {adminActionMsg && <div style={{ color: 'green', marginTop: 8 }}>{adminActionMsg}</div>}
           </div>
@@ -702,69 +796,108 @@ export default function AccountSettings() {
           position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
           background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
         }}>
-          <div style={{ background: '#fff', padding: 24, borderRadius: 8, minWidth: 320, maxWidth: 400 }}>
+          <div className= "popup popup-membership">
             <h3>User Membership Info</h3>
             <b>UID:</b> {membershipPopup.id}<br />
             <b>Role:</b> {membershipPopup.role}<br />
-            <b>Is Member:</b> {membershipPopup.is_member ? 'Yes' : 'No'}<br />
-            <b>Last Payment:</b> {membershipPopup.last_payment || ''}<br />
-            <b>Valid Through:</b> {membershipPopup.valid_through || ''}<br />
+            <b>Is Member:</b> {(pendingRenewal ? pendingRenewal.is_member : membershipPopup.is_member) ? 'Yes' : 'No'}<br />
+            <b>Last Payment:</b> {
+              (pendingRenewal ? pendingRenewal.last_payment : membershipPopup.last_payment)
+                ? new Date(pendingRenewal ? pendingRenewal.last_payment : membershipPopup.last_payment).toISOString().slice(0,10)
+                : ''
+            }<br />
+            <b>Valid Through:</b>{' '}
+            <input
+              type="date"
+              value={
+                (pendingRenewal ? pendingRenewal.valid_through : membershipPopup.valid_through)
+                  ? new Date(pendingRenewal ? pendingRenewal.valid_through : membershipPopup.valid_through).toISOString().slice(0,10)
+                  : ''
+              }
+              onChange={e => {
+                const newDate = e.target.value;
+                setPendingRenewal(prev => ({
+                  ...(prev || {
+                    last_payment: (pendingRenewal ? pendingRenewal.last_payment : membershipPopup.last_payment),
+                    is_member: (pendingRenewal ? pendingRenewal.is_member : membershipPopup.is_member)
+                  }),
+                  valid_through: new Date(newDate).toISOString()
+                }));
+              }}
+              style={{ marginBottom: 4 }}
+            />
+            <br />
 
             <div style={{ marginTop: 16 }}>
               <b>Renew Membership:</b><br />
-              <button onClick={async () => {
+              <button onClick={() => {
                 const now = new Date();
-                const validThrough = new Date(now);
-                validThrough.setMonth(validThrough.getMonth() + 2);
-                await supabase.from('user_membership').update({
-                  last_payment: now.toISOString(),
-                  valid_through: validThrough.toISOString(),
-                  is_member: true
-                }).eq('id', popupUserId);
-
-                // Refresh popup and superuser table
-                const { data } = await supabase.from('user_membership').select('*').eq('id', popupUserId).single();
-                setMembershipPopup(data);
-                await fetchAllMemberships();
-
-                // Refresh own membership if updated
-                if (user && popupUserId === user.id) {
-                  const { data: selfMembership } = await supabase
-                    .from('user_membership')
-                    .select('*')
-                    .eq('id', user.id)
-                    .single();
-                  setMembership(selfMembership);
+                // Use the latest valid_through (pending or from DB), whichever is later
+                let baseDate = now;
+                const currentValid = pendingRenewal?.valid_through || membershipPopup.valid_through;
+                if (currentValid && new Date(currentValid) > now) {
+                  baseDate = new Date(currentValid);
                 }
-              }} style={{ marginRight: 8 }}>2 Months</button>
-              <button onClick={async () => {
-                const now = new Date();
-                const validThrough = new Date(now);
-                validThrough.setFullYear(validThrough.getFullYear() + 1);
-                await supabase.from('user_membership').update({
+                const validThrough = new Date(baseDate);
+                validThrough.setMonth(validThrough.getMonth() + 2);
+                setPendingRenewal({
                   last_payment: now.toISOString(),
                   valid_through: validThrough.toISOString(),
                   is_member: true
-                }).eq('id', popupUserId);
-
-                // Refresh popup and superuser table
-                const { data } = await supabase.from('user_membership').select('*').eq('id', popupUserId).single();
-                setMembershipPopup(data);
-                await fetchAllMemberships();
+                });
+              }} style={{ marginRight: 8 }}>2 Months</button>
+              <button onClick={() => {
+                const now = new Date();
+                let baseDate = now;
+                const currentValid = pendingRenewal?.valid_through || membershipPopup.valid_through;
+                if (currentValid && new Date(currentValid) > now) {
+                  baseDate = new Date(currentValid);
+                }
+                const validThrough = new Date(baseDate);
+                validThrough.setFullYear(validThrough.getFullYear() + 1);
+                setPendingRenewal({
+                  last_payment: now.toISOString(),
+                  valid_through: validThrough.toISOString(),
+                  is_member: true
+                });
               }} style={{ marginRight: 8 }}>1 Year</button>
               <button onClick={async () => {
-                await supabase.from('user_membership').update({
+                setPendingRenewal({
                   valid_through: null,
                   is_member: false
-                }).eq('id', popupUserId);
-
-                // Refresh popup and superuser table
-                const { data } = await supabase.from('user_membership').select('*').eq('id', popupUserId).single();
-                setMembershipPopup(data);
-                await fetchAllMemberships();
+                });
               }} style={{ background: 'red', color: 'white' }}>Remove Membership</button>
             </div>
-            <button style={{ marginTop: 16 }} onClick={() => setPopupUserId(null)}>Close</button>
+            <div style={{ marginTop: 16 }}>
+              <button onClick={() => {
+                setPendingRenewal(null);
+                setPopupUserId(null);
+              }}>Cancel</button>
+              <button
+                style={{ marginLeft: 8 }}
+                disabled={!pendingRenewal}
+                onClick={async () => {
+                  if (pendingRenewal) {
+                    await supabase.from('user_membership').update(pendingRenewal).eq('id', popupUserId);
+                    // Refresh popup and superuser table
+                    const { data } = await supabase.from('user_membership').select('*').eq('id', popupUserId).single();
+                    setMembershipPopup(data);
+                    await fetchAllMemberships();
+                    // Refresh own membership if updated
+                    if (user && popupUserId === user.id) {
+                      const { data: selfMembership } = await supabase
+                        .from('user_membership')
+                        .select('*')
+                        .eq('id', user.id)
+                        .single();
+                      setMembership(selfMembership);
+                    }
+                  }
+                  setPendingRenewal(null);
+                  setPopupUserId(null);
+                }}
+              >Save</button>
+            </div>
           </div>
         </div>
       )}

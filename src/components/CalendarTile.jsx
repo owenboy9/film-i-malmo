@@ -31,10 +31,10 @@ export default function CalendarTile({ event }) {
         src={imageUrl}
         alt={event.title}
         style={{
-          width: '100%',
-          height: '220px',      // or any height you want
-          objectFit: 'cover',   // crop to fill the box
-          borderRadius: '8px'   // optional: rounded corners
+          width: '220px',
+          height: '220px',
+          objectFit: 'cover',
+          borderRadius: '8px'
         }}
       />
       <div><b>{event.title}</b></div>
