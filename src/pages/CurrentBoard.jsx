@@ -5,6 +5,13 @@ import '../styles/CurrentBoard.css'
 
 const SUPABASE_URL = 'https://llslxcymbxcvwrufjaqm.supabase.co'
 
+const ROLE_PRIORITY = {
+  'chairperson': 1,
+  'vice-chairperson': 2,
+  'treasurer': 3,
+  'board member': 4
+}
+
 export default function CurrentBoard() {
   const currentYear = new Date().getFullYear()
   const { table } = crudConfigs.rope_runners
@@ -37,7 +44,16 @@ export default function CurrentBoard() {
         setLoading(false)
         return
       }
-      setBoardMembers(data.filter(r => r.board_member))
+      setBoardMembers(
+        data
+          .filter(r => r.board_member)
+          .sort((a, b) => {
+            const priorityA = ROLE_PRIORITY[a.role] || 99
+            const priorityB = ROLE_PRIORITY[b.role] || 99
+            return priorityA - priorityB
+          })
+      )  
+
       setOthers(data.filter(r => !r.board_member))
       setLoading(false)
     }
