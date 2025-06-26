@@ -54,10 +54,12 @@
 .nav-desktop {
   position: absolute;
   bottom: 0rem;
-  right: 37%;
+  left: 50%;
+  transform: translateX(-50%);
   opacity: 0;
   animation: fadeIn 0.8s ease-in-out forwards;
 }
+
 /* Nav styles */
 .nav-desktop ul {
   display: flex;
@@ -180,11 +182,12 @@
 }
 .nav-menu ul {
   list-style: none;
-  padding: 20px;
-  background: white;
+  padding: 2px;
+  background: black;
+  opacity: 0.9;
   position: absolute;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  border-radius: 8px;
+  border-radius: 6px;
   flex-direction: column;
   border: solid 1px black;
   box-shadow: #282c34 0px 4px 5px rgba(0, 0, 0, 0.2);
@@ -196,17 +199,24 @@
   display: flex;
 }
 .nav-menu ul li {
-  padding: 10px 20px;
+  padding: 0px 0px;
+  padding: 10px;
   transition: background-color 0.3s, color 0.3s;
 }
 .nav-menu ul li a {
+  display: block;
+  width: 100%;
   text-decoration: none;
   font-size: 1.3rem;
-  color: #333;
+  color: #fafafa;
+}
+.nav-menu ul li:hover {
+  background-color: tomato;
 }
 .nav-menu ul li a:hover {
-  color: #dbbf8b;
+  color: #333;
   text-decoration: underline;
+  width: 100%;
 }
 
 .popup.popup-logout{

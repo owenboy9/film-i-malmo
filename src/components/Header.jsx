@@ -174,15 +174,6 @@ useEffect(() => {
             Admin
             </NavLink>
           </li>
-          <li>
-            <span onClick={toggleTheme}>
-              <FontAwesomeIcon
-                icon={isDarkMode ? faMoon : faSun}
-                className="dark-light-icon"
-              />
-            </span>
-          </li>
-
         </ul>
       </nav>
 
