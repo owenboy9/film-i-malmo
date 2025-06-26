@@ -21,7 +21,7 @@ export default function More() {
             <a href="/CurrentBoard">Current Board</a> < br />
             <a href="/Hypnos">Cafe </a> < br />
             <a href="https://hypnostheatre.com/" target="_blank">Hypnos </a> < br />
-            <a href="/past-events">Past Events</a> < br />
+            <a href="/pastevents">Past Events</a> < br />
             <a href="/CurrentPastProjects">Current & Past Projects</a> < br />
             <a href="/Volunteering">Volunteering</a>
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom'; 
 import '../styles/Header.css';
 import { ReactComponent as FilmiMalmoLogo } from '../assets/logo_fim.svg';
@@ -7,7 +7,8 @@ import { faUser, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 import { supabase } from '../supabase';
 
 
-export default function Header({ setShowAuth, user }) {
+export default function Header({ setShowAuth }) {
+  const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -83,6 +84,15 @@ useEffect(() => {
     window.location.reload();
   };
 
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    // Optionally, subscribe to auth changes for live updates
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => { listener?.subscription.unsubscribe(); };
+  }, []);
+
   return (
     <header className={`header ${isHeaderVisible ? 'visible' : 'hidden'}`}>
         
@@ -138,17 +148,27 @@ useEffect(() => {
             </NavLink>
           </li>
           <li>
-          <span onClick={toggleTheme}>
-            <FontAwesomeIcon
-              icon={isDarkMode ? faMoon : faSun}
-              className="dark-light-icon"
-            />
-          </span>
+            <span onClick={toggleTheme}>
+              <FontAwesomeIcon
+                icon={isDarkMode ? faMoon : faSun}
+                className="dark-light-icon"
+              />
+            </span>
           </li>
           <li>
-            <NavLink to="/account-settings" onClick={() => { toggleMenu(); setShowAuth(false); window.scrollTo(0, 0); }} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
-              My Membership
-            </NavLink>
+            {user ? (
+              <NavLink to="/account-settings" className="headerbtn">
+                {user?.user_metadata?.display_name || user?.email || 'My Membership'}
+              </NavLink>
+            ) : (
+              <button
+                className="headerbtn"
+                style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+                onClick={() => setShowAuth(true)}
+              >
+                My Membership
+              </button>
+            )}
           </li>
         </ul>
       </nav>
@@ -206,19 +226,28 @@ useEffect(() => {
             </NavLink>
           </li>
           <li>
-          <span onClick={toggleTheme}>
-            <FontAwesomeIcon
-              icon={isDarkMode ? faMoon : faSun}
-              className="dark-light-icon"
-            />
-          </span>
-            <NavLink
-              to="/account-settings"
-              onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
-              className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
-            >
-              My Membership
-            </NavLink>
+            <span onClick={toggleTheme}>
+              <FontAwesomeIcon
+                icon={isDarkMode ? faMoon : faSun}
+                className="dark-light-icon"
+              />
+            </span>
+            {user ? (
+              <NavLink
+                to="/account-settings"
+                className="headerbtn"
+              >
+                {user?.user_metadata?.display_name || user?.email || 'My Membership'}
+              </NavLink>
+            ) : (
+              <button
+                className="headerbtn"
+                style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+                onClick={() => setShowAuth(true)}
+              >
+                My Membership
+              </button>
+            )}
           </li>
           <li>
             <button

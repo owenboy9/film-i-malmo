@@ -1,11 +1,16 @@
 import React from 'react';
 import { supabase } from '../supabase';
 
-export default function CalendarTile({ event }) {
+export default function CalendarTile({ event, date }) {
   if (!event) {
+    // Show weekday and date for empty cells
+    const dateObj = date ? new Date(date) : new Date();
+    const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+    const dateStr = dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+
     return (
       <div className="calendar-tile empty">
-        <img src="/placeholder.jpg" alt="No event" style={{ width: '100%' }} />
+        <div><b>{weekday}, {dateStr}</b></div>
         <div>Nothing scheduled yet</div>
       </div>
     );
@@ -45,6 +50,16 @@ export default function CalendarTile({ event }) {
         {event.language} {event.subtitles ? `with ${event.subtitles} subtitles` : ''}
       </div>
       <div>{event.short_description || event.description}</div>
+    </div>
+  );
+}
+
+export function Calendar({ days, eventForDay }) {
+  return (
+    <div className="calendar-grid">
+      {days.map(day => (
+        <CalendarTile key={day} event={eventForDay(day)} date={day} />
+      ))}
     </div>
   );
 }
