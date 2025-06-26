@@ -132,8 +132,14 @@ useEffect(() => {
               className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
             >
               {user
-    ? user.user_metadata?.display_name || user.email || 'My Membership'
-    : 'Login'}
+  ? (
+      user.user_metadata?.display_name
+        ? user.user_metadata.display_name.split(' ')[0]
+        : user.email
+          ? user.email.split('@')[0]
+          : 'My Membership'
+    )
+  : 'Login'}
             </NavLink>
           </li>
         </ul>
