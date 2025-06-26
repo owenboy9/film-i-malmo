@@ -112,6 +112,10 @@
   text-align: right;
 }
 
+.calendar-popup-content p {
+  text-align: center;
+}
+
 .calendar-popup-details {
   text-align: right;
 }
