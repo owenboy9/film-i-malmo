@@ -3,7 +3,7 @@ import Auth from '../components/Auth'
 import { supabase } from '../supabase'
 import { useNavigate } from 'react-router-dom'
 import CalendarTile from '../components/CalendarTile';
-import '../styles/Home.css';
+
 
 export default function Home() {
   const [user, setUser] = useState(null);
