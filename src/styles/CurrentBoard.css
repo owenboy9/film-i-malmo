@@ -1,0 +1,48 @@
+.people {
+display: flex;
+min-width: 50vw;
+/* flex-direction: column; */
+gap: 2rem;
+}
+
+.people img {
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    align-self: center;
+    height: 15rem;
+    width: auto;
+    border-radius: 5px;
+padding-left: 0;
+}
+
+.people.board-members, .people.others {
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    
+    
+}
+.person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+  padding: 2rem;
+  margin: 1rem;
+  width: 30rem;
+}
+
+@media (max-width: 1200px) {
+  .people.board-members,
+  .people.others {
+    flex-direction: column;
+    align-items: center;
+  }
+  .person {
+    width: 90vw;
+    max-width: 400px;
+  }
+}

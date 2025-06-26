@@ -47,15 +47,18 @@ export default function Header() {
   return (
     <footer className={`footer ${isFooterVisible ? 'visible' : 'hidden'}`}>
         
-
-        <NavLink to="/" onClick={() => window.scrollTo(0, 0)}>
-        <HypnosLogo className="logo-hypnos" />
-        </NavLink>
-
-        <div className="footer-links">
+        <div className="footer-links-left">
         <a href="https://www.instagram.com/filmimalmo" target="_blank" rel="noopener noreferrer" className="footer-icon-link">
           <FontAwesomeIcon icon={faInstagram} className="footer-icon" />
         </a>
+        </div>
+
+        <NavLink to="https://hypnostheatre.com/" target="_blank" rel="noopener noreferrer" className="footer-logo-link">
+        <HypnosLogo className="logo-hypnos" />
+        </NavLink>
+
+        <div className="footer-links-right">
+
         <a href="https://www.facebook.com/filmimalmo" target="_blank" rel="noopener noreferrer" className="footer-icon-link">
           <FontAwesomeIcon icon={faFacebook} className="footer-icon" />
         </a>   

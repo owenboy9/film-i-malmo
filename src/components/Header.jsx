@@ -145,6 +145,11 @@ useEffect(() => {
       <nav className={`nav-menu ${isMenuOpen ? 'open' : ''}`}>
         <ul>
           <li>
+            <NavLink to="/" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
+            Home
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/calendar" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
             Calendar
             </NavLink>
@@ -165,24 +170,10 @@ useEffect(() => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/TestDB" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
-            TestDB
-            </NavLink>
-          </li>
-          <li>
             <NavLink to="/admin" onClick={() => {toggleMenu(); window.scrollTo(0, 0);}} className={({ isActive }) => (isActive ? 'burgerbtn active' : 'burgerbtn')}            >
             Admin
             </NavLink>
           </li>
-          <li>
-            <span onClick={toggleTheme}>
-              <FontAwesomeIcon
-                icon={isDarkMode ? faMoon : faSun}
-                className="dark-light-icon"
-              />
-            </span>
-          </li>
-
         </ul>
       </nav>
 
@@ -190,11 +181,18 @@ useEffect(() => {
         <ul>
           <li>
             <NavLink
+              to="/"
+              onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
+              className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
+            >Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to="/calendar"
               onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
               className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
-            >
-              Calendar
+            >Calendar
             </NavLink>
           </li>
           <li>
@@ -202,8 +200,7 @@ useEffect(() => {
               to="/about"
               onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
               className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
-            >
-              About
+            >About
             </NavLink>
           </li>
           <li>
@@ -211,8 +208,7 @@ useEffect(() => {
               to="/contact"
               onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
               className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
-            >
-              Contact
+            >Contact
             </NavLink>
           </li>
           <li>
@@ -222,15 +218,6 @@ useEffect(() => {
               className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
             >
               More
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/TestDB"
-              onClick={() => { setShowAuth(false); window.scrollTo(0, 0); }}
-              className={({ isActive }) => (isActive ? 'headerbtn active' : 'headerbtn')}
-            >
-              TestDB
             </NavLink>
           </li>
           <li>
