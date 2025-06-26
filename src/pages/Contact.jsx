@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
+import '../styles/Contact.css'
 
 export default function Contact() {
   const [subject, setSubject] = useState('')
@@ -33,7 +34,7 @@ export default function Contact() {
   }
 
   return (
-    <div>
+    <div className="contact-form">
       <h2>Contact Us</h2>
       <form onSubmit={handleSubmit}>
         <input
