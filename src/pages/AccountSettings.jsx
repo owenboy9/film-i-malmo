@@ -124,11 +124,15 @@ export default function AccountSettings() {
         .select('id, role, is_member, last_payment, valid_through, users(email)')
       if (!error && data) {
         // Merge email into each membership row for easy access
-        const withEmail = data.map(m => ({
-          ...m,
-          email: m.users?.email || ''
-        }));
-        setAllMemberships(withEmail);
+        const { data: memberships, error: memError } = await supabase.from('user_membership').select('*');
+const { data: users, error: userError } = await supabase.from('users').select('id, email');
+if (!memError && !userError) {
+  const withEmail = memberships.map(m => ({
+    ...m,
+    email: users.find(u => u.id === m.id)?.email || ''
+  }));
+  setAllMemberships(withEmail);
+}
       }
     }
   };
@@ -150,8 +154,8 @@ export default function AccountSettings() {
   // Fetch joined users data
   const fetchJoinedUsers = async () => {
     const { data: users, error: userError } = await supabase.from('users').select('id, first_name, last_name, email');
-    const { data: memberships, error: memError } = await supabase.from('user_membership').select('id, valid_through');
-    console.log('users:', users, 'memberships:', memberships, userError, memError);
+    // Make sure to select 'role' here:
+    const { data: memberships, error: memError } = await supabase.from('user_membership').select('id, valid_through, role');
     if (!userError && !memError) {
       const merged = users.map(u => ({
         ...u,
@@ -452,10 +456,10 @@ useEffect(() => {
   });
 
   return (
-    <div>
+    <div className="account-settings">
       <h2>Account Settings</h2>
       <h3>Account Info</h3>
-      <div>
+      <div className="account-info">
         <b>Name:</b> {user?.user_metadata?.display_name || ''}<br />
         <b>Email:</b> {user?.email || ''}<br />
         <b>Address:</b> {formatAddress(user)}<br />
@@ -503,6 +507,7 @@ useEffect(() => {
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>First Name</th>
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>Last Name</th>
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>Email</th>
+                  <th style={{ border: '1px solid #ccc', padding: 4 }}>Role</th> {/* Add this */}
                   <th style={{ border: '1px solid #ccc', padding: 4 }}>Valid Through</th>
                 </tr>
               </thead>
@@ -526,6 +531,9 @@ useEffect(() => {
                       <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.first_name}</td>
                       <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.last_name}</td>
                       <td style={{ border: '1px solid #ccc', padding: 4 }}>{u.email}</td>
+                      <td style={{ border: '1px solid #ccc', padding: 4 }}>
+                        {u.user_membership?.role || ''}
+                      </td> {/* Show role */}
                       <td style={{ border: '1px solid #ccc', padding: 4 }}>
                         {u.user_membership?.valid_through
                           ? new Date(u.user_membership.valid_through).toISOString().slice(0, 10)
@@ -798,9 +806,6 @@ useEffect(() => {
         }}>
           <div className= "popup popup-membership">
             <h3>User Membership Info</h3>
-            <b>UID:</b> {membershipPopup.id}<br />
-            <b>Role:</b> {membershipPopup.role}<br />
-            <b>Is Member:</b> {(pendingRenewal ? pendingRenewal.is_member : membershipPopup.is_member) ? 'Yes' : 'No'}<br />
             <b>Last Payment:</b> {
               (pendingRenewal ? pendingRenewal.last_payment : membershipPopup.last_payment)
                 ? new Date(pendingRenewal ? pendingRenewal.last_payment : membershipPopup.last_payment).toISOString().slice(0,10)

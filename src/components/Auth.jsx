@@ -131,7 +131,7 @@ export default function Auth() {
 
   if (signupMessage) {
     return (
-      <div>
+      <div className="account-settings">
         <p style={{color: 'green'}}>{signupMessage}</p>
         <button onClick={() => setSignupMessage('')}>Back</button>
       </div>
@@ -140,7 +140,7 @@ export default function Auth() {
 
   if (resetMessage) {
     return (
-      <div>
+      <div className="account-settings">
         <p style={{color: 'green'}}>{resetMessage}</p>
         <button onClick={() => setResetMessage('')}>Back</button>
       </div>
@@ -149,7 +149,7 @@ export default function Auth() {
 
   if (!mode) {
     return (
-      <div>
+      <div className="account-settings">
         <h2>Welcome guest!</h2>
         <p>Do you wish to Login or Sign Up?</p>
         <button onClick={() => setMode('login')}>Login</button>
@@ -160,7 +160,7 @@ export default function Auth() {
 
   if (mode === 'reset') {
     return (
-      <div>
+      <div className="account-settings">
         <h2>Reset Password</h2>
         <input
           type="email"
@@ -176,7 +176,7 @@ export default function Auth() {
   }
 
   return (
-    <div>
+    <div className="account-settings">
       <h2>{mode === 'login' ? 'Login' : 'Sign Up'}</h2>
       {mode === 'signup' && (
         <>
@@ -195,7 +195,6 @@ export default function Auth() {
             required
           /><br/>
           <label>
-            Birth date:&nbsp;
             <input
               type="date"
               value={birthDate}

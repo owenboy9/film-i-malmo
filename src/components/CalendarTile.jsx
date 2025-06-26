@@ -1,7 +1,9 @@
 import React from 'react';
 import { supabase } from '../supabase';
 
-export default function CalendarTile({ event, date }) {
+export default function CalendarTile({ event, date, faded, onClick }) {
+  const tileClass = `calendar-tile${!event ? ' empty' : ''}${faded ? ' faded' : ''}`;
+
   if (!event) {
     // Show weekday and date for empty cells
     const dateObj = date ? new Date(date) : new Date();
@@ -9,7 +11,7 @@ export default function CalendarTile({ event, date }) {
     const dateStr = dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
 
     return (
-      <div className="calendar-tile empty">
+      <div className={tileClass}>
         <div><b>{weekday}, {dateStr}</b></div>
         <div>Nothing scheduled yet</div>
       </div>
@@ -29,7 +31,7 @@ export default function CalendarTile({ event, date }) {
   const timeStr = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
   return (
-    <div className="calendar-tile">
+    <div className={tileClass} onClick={onClick} style={{ cursor: onClick ? 'pointer' : undefined }}>
       <div><b>{weekday}, {dateStr}</b></div>
       <div>{timeStr}</div>
       <img
@@ -49,7 +51,7 @@ export default function CalendarTile({ event, date }) {
         {event.country} / {event.year}, {event.length}'<br />
         {event.language} {event.subtitles ? `with ${event.subtitles} subtitles` : ''}
       </div>
-      <div>{event.short_description || event.description}</div>
+      <div>{event.short_description}</div>
     </div>
   );
 }
