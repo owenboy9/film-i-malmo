@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../supabase'
 import { crudConfigs } from '../components/GenericCrudProps'
+import '../styles/CurrentBoard.css' 
 
 const SUPABASE_URL = 'https://llslxcymbxcvwrufjaqm.supabase.co'
 
@@ -51,31 +52,21 @@ export default function CurrentBoard() {
 
     return (
       <div
-        key={row.id}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          marginBottom: '2rem',
-        }}
+        key={row.id} className='person'
       >
         <div>
           {url && (
             <img
               src={url}
               alt={row.name || 'image'}
-              style={{
-                maxHeight: 120,
-                width: 'auto',
-                display: 'block'
-              }}
             />
           )}
         </div>
-        <div style={{ color: 'white', marginLeft: 24 }}>
-          <h2 style={{ margin: 0 }}>{row.name}</h2>
-          <h3 style={{ margin: '0.25rem 0' }}>{row.role}</h3>
-          <p style={{ margin: '0.25rem 0', fontStyle: 'italic' }}>{row.pronouns}</p>
-          <p style={{ margin: '1rem 0 0 0' }}>{row.bio}</p>
+        <div>
+          <h2>{row.name}</h2>
+          <h3>{row.role}</h3>
+          <p>{row.pronouns}</p>
+          <p>{row.bio}</p>
         </div>
       </div>
     )
@@ -85,16 +76,19 @@ export default function CurrentBoard() {
   if (error) return <div style={{ color: 'red' }}>Error: {error}</div>
 
   return (
-    <div>
-      <h1 style={{ color: 'white' }}>The People Behind Film i Malmö</h1>
+    <div className='current-board'>
+      <h1>The People Behind Film i Malmö</h1>
 
-      <h2 style={{ color: 'white' }}>Board Members {currentYear}</h2>
-      {boardMembers.length === 0 && <p style={{ color: 'white' }}>No board members found.</p>}
-      {boardMembers.map(renderPerson)}
-
-      <h2 style={{ color: 'white' }}>Good to know others</h2>
-      {others.length === 0 && <p style={{ color: 'white' }}>No others found.</p>}
+      <h2>Board Members {currentYear}</h2>
+      <div className='people board-members'>
+        {boardMembers.length === 0 && <p >No board members found.</p>}
+        {boardMembers.map(renderPerson)}
+      </div>
+      <h2>Good to know others</h2>
+      <div className='people others'>
+      {others.length === 0 && <p>No others found.</p>}
       {others.map(renderPerson)}
+      </div>
     </div>
   )
 }
