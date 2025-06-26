@@ -456,10 +456,10 @@ useEffect(() => {
   });
 
   return (
-    <div>
+    <div className="account-settings">
       <h2>Account Settings</h2>
       <h3>Account Info</h3>
-      <div>
+      <div className="account-info">
         <b>Name:</b> {user?.user_metadata?.display_name || ''}<br />
         <b>Email:</b> {user?.email || ''}<br />
         <b>Address:</b> {formatAddress(user)}<br />

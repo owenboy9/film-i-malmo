@@ -33,3 +33,7 @@ textarea {
     max-width: 300px;
     max-height: 300px;
 }
+.ReCAPTCHA {
+    opacity: 0.7;
+
+}

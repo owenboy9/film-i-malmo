@@ -60,7 +60,7 @@ export default function Contact() {
           value={content}
           onChange={e => setContent(e.target.value)}
         /><br/>
-        <ReCAPTCHA
+        <ReCAPTCHA className="ReCAPTCHA"
           sitekey="6LfawGUrAAAAABe59Eg9pbpqYaqLQmail6DL14Un"
           onChange={token => setCaptchaToken(token)}
         />
