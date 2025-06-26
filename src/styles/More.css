@@ -1,0 +1,43 @@
+.more {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 8px;
+}
+.more-links {
+    align-items: center;
+    justify-content: center;
+}
+
+.newsletter-area, .newsletter {
+    margin-top: 1rem;
+}
+input{
+    max-width: 15rem;
+}
+.newsletter-email {
+    width: 15rem
+}
+.signUp-btn{
+    align-self: center;
+    width: 5rem;
+}
+
+@media screen and (max-width: 700px) {
+    .more {
+        padding: 10px;
+    }
+    .more-links {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .newsletter-email {
+        width: 12rem;
+    }
+    button {
+        width: 8rem;
+    }
+    
+}
