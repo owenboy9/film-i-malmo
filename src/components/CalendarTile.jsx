@@ -1,5 +1,6 @@
 import React from 'react';
 import { supabase } from '../supabase';
+import { ReactComponent as FilmiMalmoLogo } from '../assets/logo_fim.svg';
 
 export default function CalendarTile({ event, date, faded, onClick }) {
   const tileClass = `calendar-tile${!event ? ' empty' : ''}${faded ? ' faded' : ''}`;
@@ -13,6 +14,9 @@ export default function CalendarTile({ event, date, faded, onClick }) {
     return (
       <div className={tileClass}>
         <div><b>{weekday}, {dateStr}</b></div>
+        <div>
+          <FilmiMalmoLogo className="calendar-fim-logo" />
+        </div>
         <div>Nothing scheduled yet</div>
       </div>
     );
@@ -38,8 +42,8 @@ export default function CalendarTile({ event, date, faded, onClick }) {
         src={imageUrl}
         alt={event.title}
         style={{
-          width: '220px',
-          height: '220px',
+          width: '160px',
+          height: '160px',
           objectFit: 'cover',
           borderRadius: '8px'
         }}

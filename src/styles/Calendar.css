@@ -51,15 +51,20 @@
   opacity: 0.4;
   pointer-events: none;
 }
+.calendar-fim-logo {
+  width: 150px;
+  color: #dbbf8b;
+}
+
 
 @media (max-width: 900px) {
   .calendar-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 16px;
     padding: 16px 0;
   }
   .calendar-tile {
-    width: 180px;
+    width: 280px;
     min-height: 260px;
     padding: 8px;
   }
