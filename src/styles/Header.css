@@ -183,8 +183,8 @@
 .nav-menu ul {
   list-style: none;
   padding: 2px;
-  background: black;
-  opacity: 0.9;
+  background: rgb(23, 67, 102);
+  opacity: 0.95;
   position: absolute;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   border-radius: 6px;
@@ -211,11 +211,9 @@
   color: #fafafa;
 }
 .nav-menu ul li:hover {
-  background-color: tomato;
+  background-color:  rgba(97, 12, 12, 0.5),
 }
 .nav-menu ul li a:hover {
-  color: #333;
-  text-decoration: underline;
   width: 100%;
 }
 
