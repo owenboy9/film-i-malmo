@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../supabase' // adjust path if needed
 import '../styles/More.css'
+import { NavLink } from 'react-router-dom'
+
 export default function More() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -17,12 +19,18 @@ export default function More() {
           
           
       <div className='more-links'>
-      <a href="/Freescreen"><button>Freescreen</button></a> 
-      <a href="/PastEvents" ><button>Past Events</button></a>
+      <NavLink to="/Freescreen" ><button>Freescreen</button></NavLink> 
+      <NavLink to="/PastEvents" ><button>Past Events</button></NavLink>
+      <NavLink to="/CurrentBoard" ><button>Current Board</button></NavLink>
+      <NavLink to="/Hypnos" ><button>Café</button></NavLink>
+      <NavLink to="https://hypnostheatre.com/" target="_blank" ><button>Hypnos</button></NavLink>
+      <NavLink to="/Volunteering" ><button>Volunteering</button></NavLink>
+      {/* Changing to NavLink for better routing */}
+      {/* <a href="/PastEvents" ><button>Past Events</button></a>
       <a href="/CurrentBoard" ><button>Current Board</button></a> 
       <a href="/Hypnos" ><button>Café</button></a>
       <a href="https://hypnostheatre.com/" target="_blank" ><button>Hypnos</button></a> 
-      <a href="/Volunteering" ><button>Volunteering</button></a>
+      <a href="/Volunteering" ><button>Volunteering</button></a> */}
       </div>
       
 

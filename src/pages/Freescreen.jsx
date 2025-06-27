@@ -3,7 +3,7 @@ import '../styles/Freescreen.css';
 
 export default function freescreen() {
   return (
-    <div>
+    <div className="generic-container">
       <h1>Freescreen</h1>
 
       <div className="freescreen">

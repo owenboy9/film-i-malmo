@@ -129,3 +129,12 @@ button:active {
   max-width: 600px;
   margin: 20px auto;
 }
+/* Generic Container for Fullsreen, Past Events */
+.generic-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1024px;
+  margin: 20px auto;
+}

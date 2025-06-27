@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function hypnos() {
   return (
-    <div>
+    <div className="generic-container">
       <h1>Café menu</h1> 
 
       <img src="https://filmimalmo.se/wp-content/uploads/2022/06/hypnos-interior.jpg" alt="freescreen" />

@@ -53,7 +53,7 @@ export default function PastEvents() {
   const closePopup = () => setSelectedEvent(null);
 
   return (
-    <div>
+    <div className="generic-container">
       <h2>Past Events</h2>
       <div style={{
         display: 'flex',

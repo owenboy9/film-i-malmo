@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function volunteering() {
   return (
-    <div>
+    <div className="generic-container">
       <h1>Volunteering</h1>
 
       <p>
