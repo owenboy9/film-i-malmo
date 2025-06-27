@@ -35,7 +35,7 @@ export default function Admin() {
   }
 
   return (
-    <div>
+    <div className="generic-container">
       <p>This page is for admin to handle page contents.</p>
 
       <div style={{ marginBottom: '1rem' }}>
