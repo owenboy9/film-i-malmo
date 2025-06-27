@@ -48,6 +48,7 @@ export default function CalendarTile({ event, date, faded, onClick }) {
           borderRadius: '8px'
         }}
       />
+      <br></br>
       <div><b>{event.title}</b></div>
       <div>{event.genre}</div>
       <div>{event.director}</div>

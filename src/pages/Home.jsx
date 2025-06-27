@@ -82,12 +82,12 @@ export default function Home() {
 
       <h2>Upcoming Screenings</h2>
       <div className='home-calendar-tiles'>
-        {[0, 1, 2, 3].map(i => (
+        {events.filter(ev => !!ev).map((event, i) => (
           <CalendarTile
-            key={i}
-            event={events[i]}
-            onClick={events[i] ? () => setSelectedEvent(events[i]) : undefined}
-            className='single-calendar-tile' 
+            key={event.id || i}
+            event={event}
+            onClick={() => setSelectedEvent(event)}
+            className='single-calendar-tile'
           />
         ))}
       </div>
