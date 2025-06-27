@@ -131,7 +131,7 @@ export default function Home() {
                 <div><b>Language:</b> {selectedEvent.language}</div>
                 <div><b>Subtitles:</b> {selectedEvent.subtitles}</div>
               </div>
-              <div style={{ margin: '26px 0' }}>
+              <div style={{ margin: '66px 0' }}>
                 <br />
                 {selectedEvent.long_description || selectedEvent.description || selectedEvent.short_description}
               </div>
